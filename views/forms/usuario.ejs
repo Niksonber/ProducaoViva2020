@@ -5,28 +5,29 @@
     <% include ../partials/head %>
   </head>
   <body>
-    <% include ../partials/sidebar %>
-    <h3>Cadastrar usuário do LAB</h3>
-    <form method="POST">
-      <label>Nome:</label>
-      <input type="text" name="nome"></input>
-      <button type="submit">Cadastrar</button>
-    </form>
-    <h3>Usuários cadastrados</h3>
-    <table>
-      <tbody>
-        <tr>
-          <td>Id</td>
-          <td>Nome</td>
-        </tr>
-        <% usuarios.forEach(u => { %>
-        <tr>
-          <td><%= u.id %></td>
-          <td><%= u.nome %></td>
-        </tr>
-        <% }); %>
-      </tbody>
-    </table>
+    <% include ../partials/sidebar_top %>
+      <h3>Cadastrar usuário do LAB</h3>
+      <form method="POST">
+        <label>Nome:</label>
+        <input type="text" name="nome"></input>
+        <button type="submit">Cadastrar</button>
+      </form>
+      <h3>Usuários cadastrados</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Id</td>
+            <td>Nome</td>
+          </tr>
+          <% usuarios.forEach(u => { %>
+          <tr>
+            <td><%= u.id %></td>
+            <td><%= u.nome %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>
 </html>

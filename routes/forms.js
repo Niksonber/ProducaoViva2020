@@ -42,7 +42,17 @@ router.post('/entidadeExterna', function(req, res) {
 });
 
 router.get('/materiaPrima', function(req, res) {
-  res.render("forms/materiaPrima");
+  db.MateriaPrima.findAll().then(r => res.render("forms/materiaPrima", {materiasprimas: r}));
+});
+
+router.post('/materiaPrima', function(req, res) {
+  db.MateriaPrima.create({
+    nome: req.body.nome,
+    tipo: req.body.tipo,
+    descricao: req.body.descricao,
+    qtd_atual: 0
+  })
+  .then(r => res.redirect("materiaPrima"));
 });
 
 router.get('/loteMateriaPrima', function(req, res) {

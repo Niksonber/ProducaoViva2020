@@ -7,19 +7,52 @@ router.get('/', function(req, res) {
 });
 
 router.get('/usuario', function(req, res) {
-  res.render("forms/usuario");
+  db.Usuario.findAll().then(r => res.render("forms/usuario", {usuarios: r}));
+});
+
+router.post('/usuario', function(req, res) {
+  db.Usuario.create({
+    nome: req.body.nome
+  })
+  .then(r => res.redirect("usuario"));
 });
 
 router.get('/cliente', function(req, res) {
-  res.render("forms/cliente");
+  db.Cliente.findAll().then(r => res.render("forms/cliente", {clientes: r}));
+});
+
+router.post('/cliente', function(req, res) {
+  db.Cliente.create({
+    nome: req.body.nome,
+    demanda: req.body.demanda,
+    contato: req.body.contato
+  })
+  .then(r => res.redirect("cliente"));
 });
 
 router.get('/entidadeExterna', function(req, res) {
-  res.render("forms/entidadeExterna");
+  db.EntidadeExterna.findAll().then(r => res.render("forms/entidadeExterna", {entidades: r}));
+});
+
+router.post('/entidadeExterna', function(req, res) {
+  db.EntidadeExterna.create({
+    nome: req.body.nome
+  })
+  .then(r => res.redirect("entidadeExterna"));
 });
 
 router.get('/materiaPrima', function(req, res) {
-  res.render("forms/materiaPrima");
+  db.MateriaPrima.findAll().then(r => res.render("forms/materiaPrima", {materiasprimas: r}));
+});
+
+router.post('/materiaPrima', function(req, res) {
+  db.MateriaPrima.create({
+    nome: req.body.nome,
+    tipo: req.body.tipo,
+    descricao: req.body.descricao,
+    qtd_atual: 0
+  })
+  .then(r => res.redirect("materiaPrima"));
 });
 
 router.get('/loteMateriaPrima', function(req, res) {
@@ -61,6 +94,15 @@ router.get('/pacoteFinal', function(req, res) {
 router.get('/entregaFinal', function(req, res) {
   res.render("forms/entregaFinal");
 });
+
+router.get('/datas', function(req, res) {
+  data = req.query
+  const table = data["table"]
+  delete data["table"]
+  db[table].findAll(data).then(name =>
+    res.send(name)
+  ); 
+})
 
 
 module.exports = router;

@@ -6,13 +6,41 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-
-
-
-        <h3>Formilário de Aqui</h3>
-
-
-  <% include ../partials/sidebar_bottom %>
+      <h3>Cadastrar matéria-prima</h3>
+      <form method="POST">
+        <label>Nome:</label>
+        <input type="text" name="nome"></input>
+        <br/>
+        <label>Tipo:</label>
+        <input type="text" name="tipo"></input>
+        <br/>
+        <label>Descrição:</label>
+        <textarea name="descricao"></textarea>
+        <br/>
+        <button type="submit">Cadastrar</button>
+      </form>
+      <h3>Matérias-primas cadastrados</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Id</td>
+            <td>Nome</td>
+            <td>Tipo</td>
+            <td>Descrição</td>
+            <td>Quantidade disponível</td>
+          </tr>
+          <% materiasprimas.forEach(u => { %>
+          <tr>
+            <td><%= u.id %></td>
+            <td><%= u.nome %></td>
+            <td><%= u.tipo %></td>
+            <td><%= u.descricao %></td>
+            <td><%= u.qtd_atual %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>
 </html>

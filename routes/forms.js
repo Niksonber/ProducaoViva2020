@@ -7,7 +7,14 @@ router.get('/', function(req, res) {
 });
 
 router.get('/usuario', function(req, res) {
-  res.render("forms/usuario");
+  db.Usuario.findAll().then(r => res.render("forms/usuario", {usuarios: r}));
+});
+
+router.post('/usuario', function(req, res) {
+  db.Usuario.create({
+    nome: req.body.nome
+  })
+  .then(r => res.redirect("usuario"));
 });
 
 router.get('/cliente', function(req, res) {

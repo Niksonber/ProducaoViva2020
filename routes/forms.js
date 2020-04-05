@@ -95,5 +95,14 @@ router.get('/entregaFinal', function(req, res) {
   res.render("forms/entregaFinal");
 });
 
+router.get('/datas', function(req, res) {
+  data = req.query
+  const table = data["table"]
+  delete data["table"]
+  db[table].findAll(data).then(name =>
+    res.send(name)
+  ); 
+})
+
 
 module.exports = router;

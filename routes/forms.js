@@ -31,7 +31,14 @@ router.post('/cliente', function(req, res) {
 });
 
 router.get('/entidadeExterna', function(req, res) {
-  res.render("forms/entidadeExterna");
+  db.EntidadeExterna.findAll().then(r => res.render("forms/entidadeExterna", {entidades: r}));
+});
+
+router.post('/entidadeExterna', function(req, res) {
+  db.EntidadeExterna.create({
+    nome: req.body.nome
+  })
+  .then(r => res.redirect("entidadeExterna"));
 });
 
 router.get('/materiaPrima', function(req, res) {

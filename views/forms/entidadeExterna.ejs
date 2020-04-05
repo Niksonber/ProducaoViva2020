@@ -5,8 +5,71 @@
     <% include ../partials/head %>
   </head>
   <body>
-    <% include ../partials/sidebar %>
-    <h3>Implemente o formulário a partir daqui</h3>
+    
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="sidebar-heading">ProducaoViva2020</div>
+      <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/usuario">Cadastrar usuário</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/cliente">Cadastrar cliente</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/entidadeExterna">Cadastrar entidade externa</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/materiaPrima">Cadastrar matéria prima</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/loteMateriaPrima">Cadastrar lote de matéria prima</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/loteImpressao">Cadastrar lote de impressão</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/loteRaspagem">Cadastrar lote de raspagem</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/falhasRaspagem">Cadastrar falhas na raspagem</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/loteCorteVisor">Cadastrar/atualizar lote de visores</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/loteCorteElastico">Cadastrar lote de elástico</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/loteMontagem">Cadastrar lote de montagem</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/loteEmbalagemPrimaria">Cadastrar lote com embalagem primária</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/pacoteFinal">Cadastrar pacote final</a>
+        <a class="list-group-item list-group-item-action bg-light" href="/forms/entregaFinal">Cadastrar procedimento de entrega do pacote final</a>
+        
+      </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <button class="btn btn-primary" id="menu-toggle">Menu</button>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+
+
+
+
+
+        <h3>Formilário de entidadeExterna</h3>
+
+
+
+
+        
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  </script>
   </body>
   <% include ../partials/bottom %>
 </html>

@@ -18,7 +18,16 @@ router.post('/usuario', function(req, res) {
 });
 
 router.get('/cliente', function(req, res) {
-  res.render("forms/cliente");
+  db.Cliente.findAll().then(r => res.render("forms/cliente", {clientes: r}));
+});
+
+router.post('/cliente', function(req, res) {
+  db.Cliente.create({
+    nome: req.body.nome,
+    demanda: req.body.demanda,
+    contato: req.body.contato
+  })
+  .then(r => res.redirect("cliente"));
 });
 
 router.get('/entidadeExterna', function(req, res) {

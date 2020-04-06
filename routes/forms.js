@@ -133,24 +133,43 @@ router.post('/loteRaspagem', async function(req, res) {
   .then(r => res.redirect("loteRaspagem"));
 });
 
-router.get('/falhasRaspagem', function(req, res) {
-  res.render("forms/falhasRaspagem");
+router.get('/falhasRaspagem', async function(req, res) {
+  data = {}
+  data.loteImpressao = await db.LoteImpressao.findAll({attributes:['Id']});
+  res.render("forms/falhasRaspagem", data);
 });
 
-router.get('/loteCorteVisor', function(req, res) {
-  res.render("forms/loteCorteVisor");
+router.get('/loteCorteVisor', async function(req, res) {
+  data = {}
+  data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
+  data.transacaoMateriaPrima = await db.TransacaoMateriaPrima.findAll({attributes:['id']});
+  res.render("forms/loteCorteVisor", data);
 });
 
-router.get('/loteCorteElastico', function(req, res) {
-  res.render("forms/loteCorteElastico");
+router.get('/loteCorteElastico', async function(req, res) {
+  data = {}
+  data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
+  data.transacaoMateriaPrima = await db.TransacaoMateriaPrima.findAll({attributes:['id']});
+ 
+  res.render("forms/loteCorteElastico", data);
 });
 
-router.get('/loteMontagem', function(req, res) {
-  res.render("forms/loteMontagem");
+router.get('/loteMontagem', async function(req, res) {
+  data = {}
+  data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
+  data.loteRaspagem = await db.LoteRaspagem.findAll({attributes:['Id']});
+  data.loteVisor = await db.LoteCorteVisor.findAll({attributes:['Id']});
+  data.loteElastico = await db.LoteCorteElastico.findAll({attributes:['Id']});
+
+  res.render("forms/loteMontagem", data);
 });
 
-router.get('/loteEmbalagemPrimaria', function(req, res) {
-  res.render("forms/loteEmbalagemPrimaria");
+router.get('/loteEmbalagemPrimaria', async function(req, res) {
+  data = {}
+  data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
+  data.loteMontagem = await db.LoteMontagem.findAll({attributes:['id']});
+
+  res.render("forms/loteEmbalagemPrimaria", data);
 });
 
 router.get('/pacoteFinal', function(req, res) {

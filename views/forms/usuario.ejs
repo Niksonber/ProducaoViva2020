@@ -8,11 +8,8 @@
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar usuário do LAB</h3>
       <form method="POST">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Nome</span></div>
-          <input class="form-control" type="text" name="nome" required></input>
-        </div>
-        <button class="btn btn-success" type="submit">Cadastrar</button>
+        <input class="form-control mb-3" type="text" name="nome" placeholder="Nome" required></input>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
       <h3>Usuários cadastrados</h3>
       <div class="table-responsive-md">

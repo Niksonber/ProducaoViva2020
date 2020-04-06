@@ -8,25 +8,16 @@
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar matéria-prima</h3>
       <form method="POST">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Nome</span></div>
-          <input class="form-control" type="text" name="nome" required></input>
-        </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Tipo</span></div>
-          <select class="custom-select" name="tipo" required>
-            <option selected disabled>Selecione</option>
-            <option value="Matéria-prima">Matéria-prima</option>
-            <option value="Equipamento">Equipamento</option>
-            <option value="Material de limpeza">Material de limpeza</option>
-            <option value="Embalagem">Embalagem</option>
-          </select>
-        </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Descrição</span></div>
-          <textarea class="form-control" name="descricao"></textarea>
-        </div>
-        <button class="btn btn-success" type="submit">Cadastrar</button>
+        <input class="form-control mb-3" type="text" name="nome" placeholder="Nome" required></input>
+        <select class="custom-select mb-3" name="tipo" required>
+          <option selected disabled>Selecione o tipo</option>
+          <option value="Matéria-prima">Matéria-prima</option>
+          <option value="Equipamento">Equipamento</option>
+          <option value="Material de limpeza">Material de limpeza</option>
+          <option value="Embalagem">Embalagem</option>
+        </select>
+        <textarea class="form-control mb-3" name="descricao" placeholder="Descrição"></textarea>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
       <h3>Matérias-primas cadastrados</h3>
       <div class="table-responsive-md">

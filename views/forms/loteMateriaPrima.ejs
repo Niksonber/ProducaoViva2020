@@ -8,55 +8,38 @@
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar um lote de matéria-prima</h3>
       <form method="POST">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Matéria-prima:</span></div>
-          <select class="custom-select" name="MateriaPrimaId" required>
-            <option selected disabled>Selecione</option>
-            <% materiasPrimas.forEach(m => { %>
-            <option value="<%= m.id %>"><%= m.nome %></option>
-            <% }); %>
-          </select>
-        </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Qtd.</span></div>
-          <input class="form-control" type="number" name="qtd" value="0" required></input>
-        </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Tipo da transação</span></div>
-          <select class="custom-select" name="tipo" required>
-            <option value="Compra">Compra</option>
-            <option value="Doação">Doação</option>
-            <option value="Operação externa">Operação externa</option>
-            <option value="Operação interna">Operação interna</option>
-          </select>
-        </div>
+        <select class="custom-select mb-3" name="MateriaPrimaId" required>
+          <option selected disabled>Selecione a matéria-prima</option>
+          <% materiasPrimas.forEach(m => { %>
+          <option value="<%= m.id %>"><%= m.nome %></option>
+          <% }); %>
+        </select>
+        <input class="form-control mb-3" type="number" name="qtd" placeholder="Quantidade" required></input>
+        <select class="custom-select mb-3" name="tipo" required>
+          <option selected disabled>Selecione o tipo da transação</option>
+          <option value="Compra">Compra</option>
+          <option value="Doação">Doação</option>
+          <option value="Operação externa">Operação externa</option>
+          <option value="Operação interna">Operação interna</option>
+        </select>
         <div class="input-group mb-3">
           <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
           <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
         </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Observação</span></div>
-          <textarea class="form-control" name="observacao"></textarea>
-        </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Entidade externa</span></div>
-          <select class="custom-select" name="EntidadeExternaId" required>
-            <option selected disabled>Selecione</option>
-            <% entidadesExternas.forEach(e => { %>
-              <option value="<%= e.id %>"><%= e.nome %></option>
-            <% }); %>
-          </select>
-        </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Usuário LAB</span></div>
-          <select class="custom-select" name="UsuarioId" required>
-            <option selected disabled>Selecione</option>
-            <% usuarios.forEach(u => { %>
-              <option value="<%= u.id %>"><%= u.nome %></option>
-            <% }); %>
-          </select>
-        </div>
-        <button class="btn btn-success" type="submit">Cadastrar</button>
+        <textarea class="form-control mb-3" name="observacao" placeholder="Observação"></textarea>
+        <select class="custom-select mb-3" name="EntidadeExternaId" required>
+          <option selected disabled>Selecione uma entidade externa</option>
+          <% entidadesExternas.forEach(e => { %>
+            <option value="<%= e.id %>"><%= e.nome %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
       <h3>Lotes de matéria-prima cadastradas</h3>
       <div class="table-responsive-md">

@@ -8,39 +8,27 @@
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar um lote de impressão</h3>
       <form method="POST">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Usuário LAB</span></div>
-          <select class="custom-select" name="UsuarioId" required>
-            <option selected disabled>Selecione</option>
-            <% usuarios.forEach(u => { %>
-              <option value="<%= u.id %>"><%= u.nome %></option>
-            <% }); %>
-          </select>
-        </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Qtd. Aprovadas</span></div>
-          <input class="form-control" type="number" step="1" name='qtd_aprovadas' min="1" required>
-        </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Qtd. reprovadas</span></div>
-          <input class="form-control" type="number" step="1" name='qtd_reprovadas' min="0" required>
-        </div>
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <input class="form-control mb-3" type="number" step="1" name='qtd_aprovadas' min="1" placeholder="Quantidade aprovada" required>
+        <input class="form-control mb-3" type="number" step="1" name='qtd_reprovadas' min="0" placeholder="Quantidade reprovada" required>
         <div class="input-group mb-3">
           <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
           <input class="form-control" type="date" name='data' value="<%= moment().format('YYYY-MM-DD') %>" required>
         </div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Impressora</span></div>
-          <select class="custom-select" name="cod_impressora" required>
-            <option selected disabled>Selecione</option>
-            <option value="E1">E1</option>
-            <option value="E2">E2</option>
-            <option value="E3">E3</option>
-            <option value="E4">E4</option>
-            <option value="E5">E5</option>
-          </select>
-        </div>
-        <button class="btn btn-success" type="submit">Cadastrar</button>
+        <select class="custom-select mb-3" name="cod_impressora" required>
+          <option selected disabled>Selecione a impressora</option>
+          <option value="E1">E1</option>
+          <option value="E2">E2</option>
+          <option value="E3">E3</option>
+          <option value="E4">E4</option>
+          <option value="E5">E5</option>
+        </select>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
       <h3>Lotes de impressão cadastrados</h3>
       <div class="table-responsive-md">

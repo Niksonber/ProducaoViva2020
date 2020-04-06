@@ -98,8 +98,10 @@ router.post('/loteMateriaPrima', async function(req, res) {
   }
 });
 
-router.get('/loteImpressao', function(req, res) {
-  res.render("forms/loteImpressao");
+router.get('/loteImpressao', async function(req, res) {
+  data = {}
+  data.usuario = await db.Usuario.findAll({attributes:['Id', 'nome']});
+  res.render("forms/loteImpressao", data);
 });
 
 router.get('/loteRaspagem', function(req, res) {

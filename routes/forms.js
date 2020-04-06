@@ -149,12 +149,22 @@ router.get('/loteEmbalagemPrimaria', async function(req, res) {
   res.render("forms/loteEmbalagemPrimaria", data);
 });
 
-router.get('/pacoteFinal', function(req, res) {
-  res.render("forms/pacoteFinal");
+router.get('/pacoteFinal', async function(req, res) {
+  data = {}
+  data.loteEmbalagemPrimaria = await db.LoteEmbalagemPrimaria.findAll({attributes:['id']});
+  data.pacoteFinal = await db.PacoteFinal.findOne({attributes:['id'], order:[['id', 'desc']]});
+  console.log(data.pacoteFinal.id)
+  
+  res.render("forms/pacoteFinal", data);
 });
 
-router.get('/entregaFinal', function(req, res) {
-  res.render("forms/entregaFinal");
+router.get('/entregaFinal', async function(req, res) {
+  data = {}
+  data.clientes = await db.Cliente.findAll({attributes:['id', 'nome']});
+  data.pacoteFinal = await db.PacoteFinal.findAll({attributes:['id'], order:[['id', 'desc']]});
+  data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
+ 
+  res.render("forms/entregaFinal", data);
 });
 
 router.get('/datas', function(req, res) {

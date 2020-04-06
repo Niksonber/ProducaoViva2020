@@ -116,8 +116,11 @@ router.get('/falhasRaspagem', async function(req, res) {
   res.render("forms/falhasRaspagem", data);
 });
 
-router.get('/loteCorteVisor', function(req, res) {
-  res.render("forms/loteCorteVisor");
+router.get('/loteCorteVisor', async function(req, res) {
+  data = {}
+  data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
+  data.transacaoMateriaPrima = await db.TransacaoMateriaPrima.findAll({attributes:['id']});
+  res.render("forms/loteCorteVisor", data);
 });
 
 router.get('/loteCorteElastico', function(req, res) {

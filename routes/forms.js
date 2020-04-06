@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/usuario', function(req, res) {
-  db.Usuario.findAll().then(r => res.render("forms/usuario", {usuarios: r}));
+  db.Usuario.findAll({order: [['id', 'DESC']]}).then(r => res.render("forms/usuario", {usuarios: r}));
 });
 
 router.post('/usuario', function(req, res) {
@@ -18,7 +18,7 @@ router.post('/usuario', function(req, res) {
 });
 
 router.get('/cliente', function(req, res) {
-  db.Cliente.findAll().then(r => res.render("forms/cliente", {clientes: r}));
+  db.Cliente.findAll({order: [['id', 'DESC']]}).then(r => res.render("forms/cliente", {clientes: r}));
 });
 
 router.post('/cliente', function(req, res) {
@@ -31,7 +31,7 @@ router.post('/cliente', function(req, res) {
 });
 
 router.get('/entidadeExterna', function(req, res) {
-  db.EntidadeExterna.findAll().then(r => res.render("forms/entidadeExterna", {entidades: r}));
+  db.EntidadeExterna.findAll({order: [['id', 'DESC']]}).then(r => res.render("forms/entidadeExterna", {entidades: r}));
 });
 
 router.post('/entidadeExterna', function(req, res) {
@@ -42,7 +42,7 @@ router.post('/entidadeExterna', function(req, res) {
 });
 
 router.get('/materiaPrima', function(req, res) {
-  db.MateriaPrima.findAll().then(r => res.render("forms/materiaPrima", {materiasprimas: r}));
+  db.MateriaPrima.findAll({order: [['id', 'DESC']]}).then(r => res.render("forms/materiaPrima", {materiasprimas: r}));
 });
 
 router.post('/materiaPrima', function(req, res) {
@@ -61,6 +61,7 @@ router.get('/loteMateriaPrima', async function(req, res) {
   data.entidadesExternas = await db.EntidadeExterna.findAll();
   data.usuarios = await db.Usuario.findAll();
   data.lotes = await db.LoteMateriaPrima.findAll({
+    order: [['id', 'DESC']],
     include: [
       db.MateriaPrima, 
       {model: db.TransacaoMateriaPrima, as: "PrimeiraTransacao", include: [db.EntidadeExterna, db.Usuario]}
@@ -99,8 +100,8 @@ router.post('/loteMateriaPrima', async function(req, res) {
 });
 
 router.get('/loteImpressao', async function(req, res) {
-  data = {}
-  data.lotes = await db.LoteImpressao.findAll({include: db.Usuario});
+  var data = {}
+  data.lotes = await db.LoteImpressao.findAll({order: [['id', 'DESC']], include: db.Usuario});
   data.usuarios = await db.Usuario.findAll();
   res.render("forms/loteImpressao", data);
 });
@@ -117,8 +118,8 @@ router.post('/loteImpressao', async function(req, res) {
 });
 
 router.get('/loteRaspagem', async function(req, res) {
-  data = {}
-  data.lotes = await db.LoteRaspagem.findAll({include: db.Usuario});
+  var data = {}
+  data.lotes = await db.LoteRaspagem.findAll({order: [['id', 'DESC']], include: db.Usuario});
   data.usuarios = await db.Usuario.findAll();
   res.render("forms/loteRaspagem", data);
 });

@@ -6,13 +6,95 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-
-
-
-        <h3>Formilário de Aqui</h3>
-
-
-  <% include ../partials/sidebar_bottom %>
+      <h3>Cadastrar um lote de matéria-prima</h3>
+      <form method="POST">
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <select name="MateriaPrimaId" class="custom-select" id="MateriaPrimaId" selectedIndex="0">
+              <option selected="true" disabled>Matéria-prima </option>
+              <% materiasPrimas.forEach(m => { %>
+                <option value="<%= m.id %>"><%= m.nome %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <input type="number" step="1" name='qtd' min="1" class="form-control col" placeholder="Quantidade" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <select name="tipo" class="custom-select" id="tipo" selectedIndex="0">
+              <option selected="true" disabled>Tipo da transação </option>
+              <option value="Compra">Compra</option>
+              <option value="Doação">Doação</option>
+              <option value="Operação externa">Operação externa</option>
+              <option value="Operação interna">Operação interna</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <input placeholder="Data" type="text"  class="form-control" name="data" onfocus="(this.type='date')"></input>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <input type="text" name='observacao' class="form-control col" placeholder="Observação">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <select name="EntidadeExternaId" class="custom-select" id="EntidadeExternaId" selectedIndex="0">
+              <option selected="true" disabled>Entidade externa</option>
+              <% entidadesExternas.forEach(e => { %>
+                <option value="<%= e.id %>"><%= e.nome %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <select name="UsuarioId" class="custom-select" id="UsuarioId" selectedIndex="0">
+              <option selected="true" disabled>Usuário do LAB responsável</option>
+                <% usuarios.forEach(u => { %>
+                  <option value="<%= u.id %>"><%= u.nome %></option>
+                <% }); %>
+              </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success">Cadastrar</button>
+      </form>
+      <br/>
+      <h3>Lotes de matéria-prima cadastradas</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Id</td>
+            <td>Matéria-prima</td>
+            <td>Quantidade atual do lote</td>
+            <td>Quantidade atual da matéria-prima</td>
+            <td>Data de entrada</td>
+            <td>Observação</td>
+            <td>Entidade externa</td>
+            <td>Usuário do LAB</td>
+          </tr>
+          <% lotes.forEach(l => { %>
+          <tr>
+            <td><%= l.id %></td>
+            <td><%= l.MateriaPrima.nome %></td>
+            <td><%= l.qtd_atual %></td>
+            <td><%= l.MateriaPrima.qtd_atual %></td>
+            <td><%= moment(l.PrimeiraTransacao.data).format('DD/MM/YYYY') %></td>
+            <td><%= l.PrimeiraTransacao.observacao %></td>
+            <td><%= l.PrimeiraTransacao.EntidadeExterna.nome %></td>
+            <td><%= l.PrimeiraTransacao.Usuario.nome %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>
 </html>

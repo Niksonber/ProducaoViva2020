@@ -24,7 +24,7 @@ router.get('/cliente', function(req, res) {
 router.post('/cliente', function(req, res) {
   db.Cliente.create({
     nome: req.body.nome,
-    demanda: req.body.demanda,
+    demanda: parseInt(req.body.demanda),
     contato: req.body.contato
   })
   .then(r => res.redirect("cliente"));
@@ -55,20 +55,65 @@ router.post('/materiaPrima', function(req, res) {
   .then(r => res.redirect("materiaPrima"));
 });
 
-router.get('/loteMateriaPrima', function(req, res) {
-  res.render("forms/loteMateriaPrima");
+router.get('/loteMateriaPrima', async function(req, res) {
+  var data = {};
+  data.materiasPrimas = await db.MateriaPrima.findAll();
+  data.entidadesExternas = await db.EntidadeExterna.findAll();
+  data.usuarios = await db.Usuario.findAll();
+  data.lotes = await db.LoteMateriaPrima.findAll({
+    include: [
+      db.MateriaPrima, 
+      {model: db.TransacaoMateriaPrima, as: "PrimeiraTransacao", include: [db.EntidadeExterna, db.Usuario]}
+    ]
+  });
+  res.render("forms/loteMateriaPrima", data);
 });
 
-router.get('/loteImpressao', function(req, res) {
-  res.render("forms/loteImpressao");
+router.post('/loteMateriaPrima', async function(req, res) {
+  try {
+    var qtd = req.body.qtd;
+    var lote = await db.LoteMateriaPrima.create({
+      MateriaPrimaId: req.body.MateriaPrimaId,
+      PrimeiraTransacaoId: 0,
+      qtd_atual: parseFloat(qtd)
+    });
+    var materiaPrima = await lote.getMateriaPrima();
+    materiaPrima.qtd_atual += parseFloat(qtd);
+    materiaPrima.save();
+    var transacao = await db.TransacaoMateriaPrima.create({
+      qtd: parseFloat(qtd),
+      tipo: req.body.tipo,
+      data: moment(req.body.data).toISOString(),
+      observacao: req.body.observacao,
+      LoteMateriaPrimaId: lote.id,
+      EntidadeExternaId: req.body.EntidadeExternaId,
+      UsuarioId: req.body.UsuarioId
+    });
+    lote.PrimeiraTransacaoId = transacao.id;
+    lote.save();
+    res.redirect("loteMateriaPrima");
+  }
+  catch(e){
+    res.send(e);
+  }
 });
 
-router.get('/loteRaspagem', function(req, res) {
-  res.render("forms/loteRaspagem");
+router.get('/loteImpressao', async function(req, res) {
+  data = {}
+  data.usuario = await db.Usuario.findAll({attributes:['Id', 'nome']});
+  res.render("forms/loteImpressao", data);
 });
 
-router.get('/falhasRaspagem', function(req, res) {
-  res.render("forms/falhasRaspagem");
+router.get('/loteRaspagem', async function(req, res) {
+  data = {}
+  data.loteImpressao = await db.LoteImpressao.findAll({attributes:['Id']});
+  res.render("forms/loteRaspagem", data);
+});
+
+router.get('/falhasRaspagem', async function(req, res) {
+  data = {}
+  data.loteImpressao = await db.LoteImpressao.findAll({attributes:['Id']});
+  res.render("forms/falhasRaspagem", data);
 });
 
 router.get('/loteCorteVisor', function(req, res) {

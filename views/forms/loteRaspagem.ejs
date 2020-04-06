@@ -6,43 +6,50 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-    <h3>Cadastrar um lote de raspagem</h3>
-    <form method="POST">
-      <label>Usuário do LAB responsável</label>
-      <select name="UsuarioId" required>
-        <option selected disabled>Selecione</option>
-        <% usuarios.forEach(u => { %>
-          <option value="<%= u.id %>"><%= u.nome %></option>
-        <% }); %>
-      </select>
-      <br/>
-      <label>Quantidade aprovadas</label>
-      <input type="number" step="1" name='qtd_aprovadas' min="1" required>
-      <br/>
-      <label>Data do lote</label>
-      <input type="date" name='data' value="<%= moment().format('YYYY-MM-DD') %>" required>
-      <br/>
-      <button type="submit">Cadastrar</button>
-    </form>
-    <h3>Lotes de raspagem cadastrados</h3>
-    <table>
-      <tbody>
-        <tr>
-          <td>Id</td>
-          <td>Quantidade aprovada</td>
-          <td>Data</td>
-          <td>Usuário LAB</td>
-        </tr>
-        <% lotes.forEach(l => { %>
-        <tr>
-          <td><%= l.id %></td>
-          <td><%= l.qtd_aprovadas %></td>
-          <td><%= moment(l.data).format('DD/MM/YYYY') %></td>
-          <td><%= l.Usuario.nome %></td>
-        </tr>
-        <% }); %>
-      </tbody>
-    </table>
+      <h3>Cadastrar um lote de raspagem</h3>
+      <form method="POST">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Usuário LAB</span></div>
+          <select class="custom-select" name="UsuarioId" required>
+            <option selected disabled>Selecione</option>
+            <% usuarios.forEach(u => { %>
+              <option value="<%= u.id %>"><%= u.nome %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Qtd. aprovadas</span></div>
+          <input class="form-control" type="number" step="1" name='qtd_aprovadas' min="1" required>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+          <input class="form-control" type="date" name='data' value="<%= moment().format('YYYY-MM-DD') %>" required>
+        </div>
+        <button class="btn btn-success" type="submit">Cadastrar</button>
+      </form>
+      <h3>Lotes de raspagem cadastrados</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Quantidade aprovada</th>
+              <th>Data</th>
+              <th>Usuário LAB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lotes.forEach(l => { %>
+            <tr>
+              <td><%= l.id %></td>
+              <td><%= l.qtd_aprovadas %></td>
+              <td><%= moment(l.data).format('DD/MM/YYYY') %></td>
+              <td><%= l.Usuario.nome %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
     <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>

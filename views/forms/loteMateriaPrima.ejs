@@ -8,77 +8,87 @@
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar um lote de matéria-prima</h3>
       <form method="POST">
-        <label>Matéria-prima:</label>
-        <select name="MateriaPrimaId" required>
-          <option selected disabled>Selecione</option>
-          <% materiasPrimas.forEach(m => { %>
-          <option value="<%= m.id %>"><%= m.nome %></option>
-          <% }); %>
-        </select>
-        <br/>
-        <label>Quantidade</label>
-        <input type="number" name="qtd" value="0" required></input>
-        <br/>
-        <label>Tipo da transação</label>
-        <select name="tipo" required>
-          <option value="Compra">Compra</option>
-          <option value="Doação">Doação</option>
-          <option value="Operação externa">Operação externa</option>
-          <option value="Operação interna">Operação interna</option>
-        </select>
-        <br/>
-        <label>Data</label>
-        <input type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
-        <br/>
-        <label>Observação</label>
-        <textarea name="observacao"></textarea>
-        <br/>
-        <label>Entidade externa</label>
-        <select name="EntidadeExternaId" required>
-          <option selected disabled>Selecione</option>
-          <% entidadesExternas.forEach(e => { %>
-            <option value="<%= e.id %>"><%= e.nome %></option>
-          <% }); %>
-        </select>
-        <br/>
-        <label>Usuário do LAB responsável</label>
-        <select name="UsuarioId" required>
-          <option selected disabled>Selecione</option>
-          <% usuarios.forEach(u => { %>
-            <option value="<%= u.id %>"><%= u.nome %></option>
-          <% }); %>
-        </select>
-        <br/>
-        <br/>
-        <button type="submit">Cadastrar</button>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Matéria prima:</span></div>
+          <select class="custom-select" name="MateriaPrimaId" required>
+            <option selected disabled>Selecione</option>
+            <% materiasPrimas.forEach(m => { %>
+            <option value="<%= m.id %>"><%= m.nome %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Qtd.</span></div>
+          <input class="form-control" type="number" name="qtd" value="0" required></input>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Tipo da transação</span></div>
+          <select class="custom-select" name="tipo" required>
+            <option value="Compra">Compra</option>
+            <option value="Doação">Doação</option>
+            <option value="Operação externa">Operação externa</option>
+            <option value="Operação interna">Operação interna</option>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+          <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Observação</span></div>
+          <textarea class="form-control" name="observacao"></textarea>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Entidade externa</span></div>
+          <select class="custom-select" name="EntidadeExternaId" required>
+            <option selected disabled>Selecione</option>
+            <% entidadesExternas.forEach(e => { %>
+              <option value="<%= e.id %>"><%= e.nome %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Usuário LAB</span></div>
+          <select class="custom-select" name="UsuarioId" required>
+            <option selected disabled>Selecione</option>
+            <% usuarios.forEach(u => { %>
+              <option value="<%= u.id %>"><%= u.nome %></option>
+            <% }); %>
+          </select>
+        </div>
+        <button class="btn btn-success" type="submit">Cadastrar</button>
       </form>
       <h3>Lotes de matéria-prima cadastradas</h3>
-      <table>
-        <tbody>
-          <tr>
-            <td>Id</td>
-            <td>Matéria-prima</td>
-            <td>Quantidade atual do lote</td>
-            <td>Quantidade atual da matéria-prima</td>
-            <td>Data de entrada</td>
-            <td>Observação</td>
-            <td>Entidade externa</td>
-            <td>Usuário do LAB</td>
-          </tr>
-          <% lotes.forEach(l => { %>
-          <tr>
-            <td><%= l.id %></td>
-            <td><%= l.MateriaPrima.nome %></td>
-            <td><%= l.qtd_atual %></td>
-            <td><%= l.MateriaPrima.qtd_atual %></td>
-            <td><%= moment(l.PrimeiraTransacao.data).format('DD/MM/YYYY') %></td>
-            <td><%= l.PrimeiraTransacao.observacao %></td>
-            <td><%= l.PrimeiraTransacao.EntidadeExterna.nome %></td>
-            <td><%= l.PrimeiraTransacao.Usuario.nome %></td>
-          </tr>
-          <% }); %>
-        </tbody>
-      </table>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Matéria-prima</th>
+              <th>Quantidade atual do lote</th>
+              <th>Quantidade atual da matéria-prima</th>
+              <th>Data de entrada</th>
+              <th>Observação</th>
+              <th>Entidade externa</th>
+              <th>Usuário do LAB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lotes.forEach(l => { %>
+            <tr>
+              <td><%= l.id %></td>
+              <td><%= l.MateriaPrima.nome %></td>
+              <td><%= l.qtd_atual %></td>
+              <td><%= l.MateriaPrima.qtd_atual %></td>
+              <td><%= moment(l.PrimeiraTransacao.data).format('DD/MM/YYYY') %></td>
+              <td><%= l.PrimeiraTransacao.observacao %></td>
+              <td><%= l.PrimeiraTransacao.EntidadeExterna.nome %></td>
+              <td><%= l.PrimeiraTransacao.Usuario.nome %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
     <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>

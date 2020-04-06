@@ -110,8 +110,10 @@ router.get('/loteRaspagem', async function(req, res) {
   res.render("forms/loteRaspagem", data);
 });
 
-router.get('/falhasRaspagem', function(req, res) {
-  res.render("forms/falhasRaspagem");
+router.get('/falhasRaspagem', async function(req, res) {
+  data = {}
+  data.loteImpressao = await db.LoteImpressao.findAll({attributes:['Id']});
+  res.render("forms/falhasRaspagem", data);
 });
 
 router.get('/loteCorteVisor', function(req, res) {

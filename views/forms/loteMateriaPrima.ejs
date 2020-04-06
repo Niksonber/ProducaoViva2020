@@ -9,7 +9,7 @@
       <h3>Cadastrar um lote de matéria-prima</h3>
       <form method="POST">
         <div class="input-group mb-3">
-          <div class="input-group-prepend"><span class="input-group-text">Matéria prima:</span></div>
+          <div class="input-group-prepend"><span class="input-group-text">Matéria-prima:</span></div>
           <select class="custom-select" name="MateriaPrimaId" required>
             <option selected disabled>Selecione</option>
             <% materiasPrimas.forEach(m => { %>
@@ -63,7 +63,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Id</th>
+              <th>Cód.</th>
               <th>Matéria-prima</th>
               <th>Quantidade atual do lote</th>
               <th>Quantidade atual da matéria-prima</th>
@@ -76,7 +76,7 @@
           <tbody>
             <% lotes.forEach(l => { %>
             <tr>
-              <td><%= l.id %></td>
+              <td>LMP<%= l.id %></td>
               <td><%= l.MateriaPrima.nome %></td>
               <td><%= l.qtd_atual %></td>
               <td><%= l.MateriaPrima.qtd_atual %></td>

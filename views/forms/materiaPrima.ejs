@@ -16,7 +16,7 @@
           <div class="input-group-prepend"><span class="input-group-text">Tipo</span></div>
           <select class="custom-select" name="tipo" required>
             <option selected disabled>Selecione</option>
-            <option value="Matéria prima">Matéria prima</option>
+            <option value="Matéria-prima">Matéria-prima</option>
             <option value="Equipamento">Equipamento</option>
             <option value="Material de limpeza">Material de limpeza</option>
             <option value="Embalagem">Embalagem</option>
@@ -33,7 +33,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Id</th>
+              <th>Cód.</th>
               <th>Nome</th>
               <th>Tipo</th>
               <th>Descrição</th>
@@ -43,7 +43,7 @@
           <tbody>
             <% materiasprimas.forEach(u => { %>
             <tr>
-              <td><%= u.id %></td>
+              <td>MP<%= u.id %></td>
               <td><%= u.nome %></td>
               <td><%= u.tipo %></td>
               <td><%= u.descricao %></td>

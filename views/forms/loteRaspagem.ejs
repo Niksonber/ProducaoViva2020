@@ -32,7 +32,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Id</th>
+              <th>Cód.</th>
               <th>Quantidade aprovada</th>
               <th>Data</th>
               <th>Usuário LAB</th>
@@ -41,7 +41,7 @@
           <tbody>
             <% lotes.forEach(l => { %>
             <tr>
-              <td><%= l.id %></td>
+              <td>LR<%= l.id %></td>
               <td><%= l.qtd_aprovadas %></td>
               <td><%= moment(l.data).format('DD/MM/YYYY') %></td>
               <td><%= l.Usuario.nome %></td>

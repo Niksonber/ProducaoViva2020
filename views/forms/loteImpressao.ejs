@@ -47,7 +47,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Id</th>
+              <th>Cód.</th>
               <th>Quantidade aprovada</th>
               <th>Quantidade reprovada</th>
               <th>Data</th>
@@ -58,7 +58,7 @@
           <tbody>
             <% lotes.forEach(l => { %>
             <tr>
-              <td><%= l.id %></td>
+              <td>LI<%= l.id %></td>
               <td><%= l.qtd_aprovadas %></td>
               <td><%= l.qtd_reprovadas %></td>
               <td><%= moment(l.data).format('DD/MM/YYYY') %></td>

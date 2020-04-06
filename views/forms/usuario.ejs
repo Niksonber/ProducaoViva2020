@@ -8,12 +8,9 @@
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar usuário do LAB</h3>
       <form method="POST">
-        <div class="form-group row">
-          <div class="col-sm-10">
-          <input type="text" step="1" name='nome' min="1" class="form-control col" placeholder="Nome" required>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-success">Cadastrar</button>
+        <label>Nome:</label>
+        <input type="text" name="nome" required></input>
+        <button type="submit">Cadastrar</button>
       </form>
       <h3>Usuários cadastrados</h3>
       <table>

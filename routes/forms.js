@@ -98,8 +98,22 @@ router.post('/loteMateriaPrima', async function(req, res) {
   }
 });
 
-router.get('/loteImpressao', function(req, res) {
-  res.render("forms/loteImpressao");
+router.get('/loteImpressao', async function(req, res) {
+  data = {}
+  data.lotes = await db.LoteImpressao.findAll({include: db.Usuario});
+  data.usuarios = await db.Usuario.findAll();
+  res.render("forms/loteImpressao", data);
+});
+
+router.post('/loteImpressao', async function(req, res) {
+  db.LoteImpressao.create({
+    qtd_aprovadas: parseInt(req.body.qtd_aprovadas),
+    qtd_reprovadas: parseInt(req.body.qtd_reprovadas),
+    data: moment(req.body.data).toISOString(),
+    cod_impressora: req.body.cod_impressora,
+    UsuarioId: req.body.UsuarioId
+  })
+  .then(r => res.redirect("loteImpressao"));
 });
 
 router.get('/loteRaspagem', function(req, res) {

@@ -5,8 +5,40 @@
     <% include ../partials/head %>
   </head>
   <body>
-    <% include ../partials/sidebar %>
-    <h3>Implemente o formulário a partir daqui</h3>
+    <% include ../partials/sidebar_top %>
+      <h3>Cadastrar clientes da <i>Faceshield</i></h3>
+      <form method="POST">
+        <label>Nome:</label>
+        <input type="text" name="nome"></input>
+        <br/>
+        <label>Demanda:</label>
+        <input type="number" name="demanda"></input>
+        <br/>
+        <label>Contato:</label>
+        <input type="text" name="contato"></input>
+        <br/>
+        <button type="submit">Cadastrar</button>
+      </form>
+      <h3>Clientes cadastrados</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Id</td>
+            <td>Nome</td>
+            <td>Demanda</td>
+            <td>Contato</td>
+          </tr>
+          <% clientes.forEach(u => { %>
+          <tr>
+            <td><%= u.id %></td>
+            <td><%= u.nome %></td>
+            <td><%= u.demanda %></td>
+            <td><%= u.contato %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>
 </html>

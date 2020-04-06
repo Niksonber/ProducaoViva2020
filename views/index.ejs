@@ -5,6 +5,206 @@
     <% include partials/head %>
   </head>
   <body>
+    <!-- botao   -->
+    <div class="form-group row">
+      <div class="col" style="position: relative;">
+        <button class="btn btn-success"  data-toggle="modal" data-target  =".cadastro">Raspagem</button>
+        <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
+      </div>
+
+      <div class="col"  style="position: relative;">
+        <button class="btn btn-success"  data-toggle="modal" data-target  =".loteVisor">Visor</button>
+        <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
+      </div>
+
+      <div class="col"  style="position: relative;">
+        <button class="btn btn-success"  data-toggle="modal" data-target  =".loteElastico">Elastico</button>
+        <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
+      </div>
+
+      <div class="col"  style="position: relative;">
+        <button class="btn btn-success"  data-toggle="modal" data-target  =".loteMontagem">Montagem</button>
+        <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
+      </div>
+
+      <div class="col"  style="position: relative;">
+        <button class="btn btn-success"  data-toggle="modal" data-target  =".loteEmbalagemPrimaria">Embalagem Primaria</button>
+        <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
+      </div>
+    </div>
+    <!-- Raspagem -->
+    <div class="modal fade cadastro" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+            <h3>Processo de raspagem</h3>
+            <form method="POST" class="container" action="/estoque/gerenciar/cadastrar" >
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <select name="LoteImpressaoId" class="custom-select" id="Lote_impressao_ID"></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <input type="number" step="1" name='qtd_falhas' min="1" class="form-control col" placeholder="Quantidade de falhas" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" >Cadastrar</button>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <!--  Lote de visores -->
+    <div class="modal fade loteVisor" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+            <h3>Receber Lote visor</h3>
+            <form method="POST" class="container" action="/estoque/gerenciar/cadastrar" >
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <select name="UsuarioVisorReceptorId" class="custom-select" id="UsuarioVisorReceptorId"></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-10">
+                  <select name="TransacaoMateriaPrimaId" class="custom-select" id="TransacaoMateriaPrimaId"></select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <input type="number" step="1" name='qtd_visores ' min="1" class="form-control col" placeholder="Quantidade de visores" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <input type="text" step="1" name='nomeEntregadorVisor ' min="1" class="form-control col" placeholder="Nome do entregador do Visor" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" >Cadastrar</button>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOTE DE ELASTICO -->
+    <div class="modal fade loteElastico" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+            <h3>Corte elastico</h3>
+            <form method="POST" class="container" action="/estoque/gerenciar/cadastrar" >
+                <div class="form-group row">
+                  <div class="col-sm-10">
+                  <select name="TransacaoMateriaPrimaId" class="custom-select" id="TransacaoMateriaPrimaId"></select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <input type="number" step="1" name='qtd_elasticos' min="1" class="form-control col" placeholder="Quantidade de elasticos" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" >Cadastrar</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Montagem -->
+    <div class="modal fade loteMontagem" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+            <h3>Montagem</h3>
+            <form method="POST" class="container" action="/estoque/gerenciar/cadastrar" >
+                <div class="form-group row">
+                  <div class="col-sm-10">
+                  <select name="LoteRaspagemId" class="custom-select" id="LoteRaspagemId"></select>
+                  </div>
+                </div>
+              <div class="form-group row">
+                <div class="col-sm-10">
+                <select name="LoteCorteVisorId" class="custom-select" id="LoteCorteVisorId"></select>
+                </div>
+              </div>
+              <div class="form-group row">
+                  <div class="col-sm-10">
+                  <select name="LoteCorteElasticoId" class="custom-select" id="LoteCorteElasticoId"></select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-10">
+                <select name="UsuarioId" class="custom-select" id="UsuarioId"></select>
+                </div>
+              </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <input type="number" step="1" name='qtd_faceshields' min="1" class="form-control col" placeholder="Quantidade de face shields" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" >Cadastrar</button>
+            </form>
+        </div>
+      </div>
+    </div>
+
+  
+    <!-- Embalagem primária -->
+    <div class="modal fade loteEmbalagemPrimaria" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+            <h3>Embalagem primária</h3>
+            <form method="POST" class="container" action="/estoque/gerenciar/cadastrar" >
+                <div class="form-group row">
+                  <div class="col-sm-10">
+                  <select name="LoteMontagemId" class="custom-select" id="LoteMontagemId"></select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-10">
+                  <select name="UsuarioId" class="custom-select" id="UsuarioId"></select>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-success" >Cadastrar</button>
+            </form>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+    function listagem(label, table, lista){
+        let dropdown = $('#' + label);
+        dropdown.empty();
+        dropdown.append('<option selected="true" disabled>' + label + '</option>');
+        dropdown.prop('selectedIndex', 0);
+
+
+        if(lista!=undefined){
+          for(item in lista){
+              dropdown.append($('<option></option>').text(lista[item]));
+          }
+        }
+        else{
+        // Populate dropdown with list of provinces
+        $.getJSON('/forms/datas', {table: table, attributes:["id"], group:[], where:{}},function (data) {
+            $.each(data, function (key, entry) {
+                dropdown.append($('<option></option>').text(entry[Object.keys(entry)[0]]));
+            })
+        });
+        }
+    }
+
+    listagem("Lote_impressao_ID", "LoteImpressao")
+    listagem("UsuarioVisorReceptorId", "Usuario")
+    listagem("TransacaoMateriaPrimaId", "TransacaoMateriaPrima")
+    listagem("LoteRaspagemId", "LoteRaspagem")
+    listagem("LoteCorteVisorId", "LoteCorteVisor")
+    listagem("LoteCorteElasticoId", "LoteCorteElastico")
+    listagem("UsuarioId", "Usuario")
+    listagem("LoteMontagemId", "LoteMontagem")
+    listagem("UsuarioId", "Usuario")
+
+
+    </script>
+    
     <% include partials/sidebar_top %>
     <% include partials/sidebar_bottom %>
   </body>

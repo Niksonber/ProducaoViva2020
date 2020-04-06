@@ -7,9 +7,28 @@
   <body>
     <% include ../partials/sidebar_top %>
 
+    <!-- LOTE DE ELASTICO -->
+    <h3>Corte elastico</h3>
+    <form method="POST" class="container" action="/estoque/gerenciar/cadastrar" >
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <select name="TransacaoMateriaPrimaId" class="custom-select">
+              <option selected="true" disabled>Transação Matéria Prima</option>
+              <% transacaoMateriaPrima.forEach(m => { %>
+                <opton value="<%= m.id %>"><%= m.id %></opton>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+            <input type="number" step="1" name='qtd_elasticos' min="1" class="form-control col" placeholder="Quantidade de elasticos" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success" >Cadastrar</button>
+    </form>
 
 
-        <h3>Formilário de Aqui</h3>
 
 
   <% include ../partials/sidebar_bottom %>

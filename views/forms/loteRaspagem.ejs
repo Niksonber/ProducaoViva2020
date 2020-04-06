@@ -6,13 +6,44 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-
-
-
-        <h3>Formilário de Aqui</h3>
-
-
-  <% include ../partials/sidebar_bottom %>
+    <h3>Cadastrar um lote de raspagem</h3>
+    <form method="POST">
+      <label>Usuário do LAB responsável</label>
+      <select name="UsuarioId" required>
+        <option selected disabled>Selecione</option>
+        <% usuarios.forEach(u => { %>
+          <option value="<%= u.id %>"><%= u.nome %></option>
+        <% }); %>
+      </select>
+      <br/>
+      <label>Quantidade aprovadas</label>
+      <input type="number" step="1" name='qtd_aprovadas' min="1" required>
+      <br/>
+      <label>Data do lote</label>
+      <input type="date" name='data' value="<%= moment().format('YYYY-MM-DD') %>" required>
+      <br/>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <h3>Lotes de raspagem cadastrados</h3>
+    <table>
+      <tbody>
+        <tr>
+          <td>Id</td>
+          <td>Quantidade aprovada</td>
+          <td>Data</td>
+          <td>Usuário LAB</td>
+        </tr>
+        <% lotes.forEach(l => { %>
+        <tr>
+          <td><%= l.id %></td>
+          <td><%= l.qtd_aprovadas %></td>
+          <td><%= moment(l.data).format('DD/MM/YYYY') %></td>
+          <td><%= l.Usuario.nome %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>
 </html>

@@ -116,8 +116,20 @@ router.post('/loteImpressao', async function(req, res) {
   .then(r => res.redirect("loteImpressao"));
 });
 
-router.get('/loteRaspagem', function(req, res) {
-  res.render("forms/loteRaspagem");
+router.get('/loteRaspagem', async function(req, res) {
+  data = {}
+  data.lotes = await db.LoteRaspagem.findAll({include: db.Usuario});
+  data.usuarios = await db.Usuario.findAll();
+  res.render("forms/loteRaspagem", data);
+});
+
+router.post('/loteRaspagem', async function(req, res) {
+  db.LoteRaspagem.create({
+    qtd_aprovadas: parseInt(req.body.qtd_aprovadas),
+    data: moment(req.body.data).toISOString(),
+    UsuarioId: req.body.UsuarioId
+  })
+  .then(r => res.redirect("loteRaspagem"));
 });
 
 router.get('/falhasRaspagem', function(req, res) {

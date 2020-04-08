@@ -21,7 +21,11 @@
     $("select.pretendText").change(function(){
         this.blur()
     })
-    $(".pretendText").toArray().forEach(x => {
+    $("select.pretendText").toArray().forEach(x => {
+        x.size = 1;
+        x.saved_value = x.value;
+    })
+    $("input.pretendText").toArray().forEach(x => {
         x.size = Math.max(x.value.length, 1);
         x.saved_value = x.value;
     });

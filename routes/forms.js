@@ -113,6 +113,14 @@ router.post('/materiaPrima', function(req, res) {
   .then(r => res.redirect("materiaPrima"));
 });
 
+router.put('/materiaPrima', function(req, res) {
+  var data = {};
+  data[req.body.key] = req.body.value;
+  db.MateriaPrima.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'tipo', 'descricao']}).then(rows => {
+    res.send(rows);
+  });
+});
+
 router.get('/loteMateriaPrima', async function(req, res) {
   var data = {};
   data.materiasPrimas = await db.MateriaPrima.findAll();

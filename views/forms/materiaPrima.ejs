@@ -37,9 +37,18 @@
             <% materiasprimas.forEach(u => { %>
             <tr>
               <td>MP<%= u.id %></td>
-              <td><%= u.nome %></td>
-              <td><%= u.tipo %></td>
-              <td><%= u.descricao %></td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="nome" value="<%= u.nome %>"></input></td>
+              <td>
+                <select class="pretendText" table-id="<%= u.id %>" name="tipo">
+                  <option value="PCE">Processo de corte elástico</option>
+                  <option value="PCV">Processo de corte visor</option>
+                  <option value="Matéria-prima">Matéria-prima</option>
+                  <option value="Equipamento">Equipamento</option>
+                  <option value="Material de limpeza">Material de limpeza</option>
+                  <option value="Embalagem">Embalagem</option>
+                </select>
+              </td>
+              <td><textarea class="pretendText" type="text" table-id="<%= u.id %>" name="descricao"><%= u.descricao %></textarea></td>
               <td><%= u.qtd_atual %></td>
             </tr>
             <% }); %>

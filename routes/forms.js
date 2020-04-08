@@ -36,9 +36,19 @@ router.post('/cliente', function(req, res) {
   db.Cliente.create({
     nome: req.body.nome,
     demanda: parseInt(req.body.demanda),
-    contato: req.body.contato
+    email: req.body.email,
+    nomeRepresentante: req.body.nomeRepresentante,
+    telefone: req.body.telefone
   })
   .then(r => res.redirect("cliente"));
+});
+
+router.put('/cliente', function(req, res) {
+  var data = {};
+  data[req.body.key] = req.body.value;
+  db.Cliente.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'demanda', 'email', 'nomeRepresentante', 'telefone']}).then(rows => {
+    res.send(rows);
+  });
 });
 
 router.get('/entidadeExterna', function(req, res) {

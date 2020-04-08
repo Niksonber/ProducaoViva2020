@@ -8,13 +8,14 @@
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar um lote de matéria-prima</h3>
       <form method="POST">
-        <select class="custom-select mb-3" name="MateriaPrimaId" required>
+      <select class="custom-select mb-3" name="MateriaPrimaId" onchange="var input=$('#massa_rolo')[0]; if(this.selectedOptions[0].getAttribute('tipo') == 'Filamento'){input.style.display=''; input.disabled=false;} else {input.style.display='none'; input.disabled=true;}" required>
           <option selected disabled>Selecione a matéria-prima</option>
           <% materiasPrimas.forEach(m => { %>
-          <option value="<%= m.id %>"><%= m.nome %></option>
+          <option value="<%= m.id %>" tipo="<%= m.tipo %>"><%= m.nome %></option>
           <% }); %>
         </select>
         <input class="form-control mb-3" type="number" name="qtd" step="0.001" placeholder="Quantidade" required></input>
+        <input class="form-control mb-3" type="number" name="massa_rolo" id="massa_rolo" step="0.001" placeholder="Massa do rolo" style="display: none;" disabled required></input>
         <select class="custom-select mb-3" name="tipo" required>
           <option selected disabled>Selecione o tipo da transação</option>
           <option value="Compra">Compra</option>

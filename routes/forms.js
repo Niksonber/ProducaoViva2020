@@ -138,17 +138,34 @@ router.get('/loteMateriaPrima', async function(req, res) {
 
 router.post('/loteMateriaPrima', async function(req, res) {
   try {
-    var qtd = req.body.qtd;
+    // Quantidade a ser inserida
+    var qtd = parseFloat(req.body.qtd);
+
+    // Criamos um LoteMateriaPrima
     var lote = await db.LoteMateriaPrima.create({
       MateriaPrimaId: req.body.MateriaPrimaId,
       PrimeiraTransacaoId: 0,
-      qtd_atual: parseFloat(qtd)
+      qtd_atual: qtd
     });
+
+    // Obtém a matéria prima desse lote
     var materiaPrima = await lote.getMateriaPrima();
-    materiaPrima.qtd_atual += parseFloat(qtd);
+
+    // Se o tipo da matéria prima é 'Filamento' então criamos LoteFilamento
+    if(materiaPrima.tipo == "Filamento"){
+      db.LoteFilamento.create({
+        massa_rolo: parseFloat(req.body.massa_rolo),
+        LoteMateriaPrimaId: lote.id
+      })
+    }
+    
+    // Atualizamos a massa da matéria prima
+    materiaPrima.qtd_atual += qtd;
     materiaPrima.save();
+
+    // Adicionamos a transação
     var transacao = await db.TransacaoMateriaPrima.create({
-      qtd: parseFloat(qtd),
+      qtd: qtd,
       tipo: req.body.tipo,
       data: moment(req.body.data).toISOString(),
       observacao: req.body.observacao,
@@ -156,8 +173,12 @@ router.post('/loteMateriaPrima', async function(req, res) {
       EntidadeExternaId: req.body.EntidadeExternaId,
       UsuarioId: req.body.UsuarioId
     });
+
+    // Atualizamos no lote a referência à primeira transação do lote
     lote.PrimeiraTransacaoId = transacao.id;
     lote.save();
+
+    // Finalizamos redirecionando para o GET
     res.redirect("loteMateriaPrima");
   }
   catch(e){

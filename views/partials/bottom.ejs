@@ -22,6 +22,9 @@
         this.blur()
     })
     $("select.pretendText").toArray().forEach(x => {
+        for(var i=0 ; i<x.options.length ; i++){
+            if(x.options[i].value == x.getAttribute("default-value")) x.selectedIndex = i;
+        }
         x.size = 1;
         x.saved_value = x.value;
     })

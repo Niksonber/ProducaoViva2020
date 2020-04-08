@@ -9,6 +9,8 @@
       <h3>Cadastrar usuário do LAB</h3>
       <form method="POST">
         <input class="form-control mb-3" type="text" name="nome" placeholder="Nome" required></input>
+        <input class="form-control mb-3" type="text" name="email" placeholder="E-mail" required></input>
+        <input class="form-control mb-3" type="text" name="telefone" placeholder="Telefone" required></input>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
       <h3>Usuários cadastrados</h3>
@@ -16,15 +18,21 @@
         <table class="table">
           <thead>
             <tr>
+              <th></th>
               <th>Id</th>
               <th>Nome</th>
+              <th>E-mail</th>
+              <th>Telefone</th>
             </tr>
           </thead>
           <tbody>
             <% usuarios.forEach(u => { %>
             <tr>
+              <td><a href=""><img src="/images/trash.png" width="16"/></a></td>
               <td><%= u.id %></td>
-              <td><%= u.nome %></td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="nome" value="<%= u.nome %>"></input></td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="email" value="<%= u.email %>"></input></td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="telefone" value="<%= u.telefone %>"></input></td>
             </tr>
             <% }); %>
           </tbody>

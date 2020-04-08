@@ -1,2 +1,21 @@
 <script src="/javascripts/popper.min.js"></script>
 <script src="/javascripts/bootstrap.js"></script>
+<script>
+    $(".pretendText").parent().addClass("pretendTextParent");
+    $(".pretendText").keyup(function(){this.size = Math.max(this.value.length, 1)});
+    $(".pretendText").toArray().forEach(x => x.size = Math.max(x.value.length, 1))
+    $(".pretendText").change(function(){
+        var data = {};
+        data["id"] = this.getAttribute("table-id");
+        data["key"] = this.name;
+        data["value"] = this.value;
+        $.ajax({
+            url: "",
+            data: data,
+            type: "PUT",
+            success: function(result) {
+                console.log(result);
+            }
+        });
+    });
+</script>

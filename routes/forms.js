@@ -12,9 +12,20 @@ router.get('/usuario', function(req, res) {
 
 router.post('/usuario', function(req, res) {
   db.Usuario.create({
-    nome: req.body.nome
+    nome: req.body.nome,
+    email: req.body.email,
+    telefone: req.body.telefone
   })
   .then(r => res.redirect("usuario"));
+});
+
+router.put('/usuario', function(req, res) {
+  var data = {};
+  data[req.body.key] = req.body.value;
+  console.log(req.body.id)
+  db.Usuario.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'email']}).then(rows => {
+    res.send(rows);
+  });
 });
 
 router.get('/cliente', function(req, res) {

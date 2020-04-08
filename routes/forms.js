@@ -28,6 +28,32 @@ router.put('/usuario', function(req, res) {
   });
 });
 
+router.get('/usuarioExterno', async function(req, res) {
+  var data = {};
+  data.entidadesExternas = await db.EntidadeExterna.findAll();
+  data.usuarios = await db.UsuarioExterno.findAll({order: [['id', 'DESC']], include: db.EntidadeExterna});
+  res.render("forms/usuarioExterno", data);
+});
+
+router.post('/usuarioExterno', function(req, res) {
+  db.UsuarioExterno.create({
+    nome: req.body.nome,
+    email: req.body.email,
+    telefone: req.body.telefone,
+    EntidadeExternaId: parseInt(req.body.EntidadeExternaId)
+  })
+  .then(r => res.redirect("usuarioExterno"));
+});
+
+router.put('/usuarioExterno', function(req, res) {
+  var data = {};
+  data[req.body.key] = req.body.value;
+  // O campo fields faz com que apenas esses campos possam ser alterados pelo update, se alguém mal-intencioando colocar key=alguma outra coisa o update não vai fazer nada
+  db.UsuarioExterno.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'email', 'telefone', 'EntidadeExternaId']}).then(rows => {
+    res.send(rows);
+  });
+});
+
 router.get('/cliente', function(req, res) {
   db.Cliente.findAll({order: [['id', 'DESC']]}).then(r => res.render("forms/cliente", {clientes: r}));
 });
@@ -57,9 +83,20 @@ router.get('/entidadeExterna', function(req, res) {
 
 router.post('/entidadeExterna', function(req, res) {
   db.EntidadeExterna.create({
-    nome: req.body.nome
+    nome: req.body.nome,
+    email: req.body.email,
+    nomeRepresentante: req.body.nomeRepresentante,
+    telefone: req.body.telefone
   })
   .then(r => res.redirect("entidadeExterna"));
+});
+
+router.put('/entidadeExterna', function(req, res) {
+  var data = {};
+  data[req.body.key] = req.body.value;
+  db.EntidadeExterna.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'email', 'nomeRepresentante', 'telefone']}).then(rows => {
+    res.send(rows);
+  });
 });
 
 router.get('/materiaPrima', function(req, res) {

@@ -10,6 +10,9 @@
       Uma entidade externa é qualquer entidade que recebe do LAB ou entrega para o LAB matéria-prima.
       <form method="POST">
         <input class="form-control mb-3" type="text" name="nome" placeholder="Nome" required></input>
+        <input class="form-control mb-3" type="text" name="email" placeholder="E-mail"></input>
+        <input class="form-control mb-3" type="text" name="nomeRepresentante" placeholder="Nome do representante"></input>
+        <input class="form-control mb-3" type="text" name="telefone" placeholder="Telefone"></input>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
       <h3>Entidades externas cadastradas</h3>
@@ -19,13 +22,19 @@
             <tr>
               <th>Id</th>
               <th>Nome</th>
+              <th>E-mail</th>
+              <th>Representante</th>
+              <th>Telefone</th>
             </tr>
           </thead>
           <tbody>
             <% entidades.forEach(u => { %>
             <tr>
               <td><%= u.id %></td>
-              <td><%= u.nome %></td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="nome" value="<%= u.nome %>"></input></td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="email" value="<%= u.email %>"></input></td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="nomeRepresentante" value="<%= u.nomeRepresentante %>"></input></td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="telefone" value="<%= u.telefone %>"></input></td>
             </tr>
             <% }); %>
           </tbody>

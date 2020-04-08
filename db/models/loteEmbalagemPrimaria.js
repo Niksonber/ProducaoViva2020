@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
 
   // Relacionamento dessa entidade com outras
   LoteEmbalagemPrimaria.associate = (models) => {
-    LoteEmbalagemPrimaria.belongsTo(models.LoteMontagem); // <- Cria chave estrangeira LoteMontagemId nessa tabela
+    LoteEmbalagemPrimaria.belongsTo(models.Lote); // <- Cria chave estrangeira LoteId nessa tabela
     LoteEmbalagemPrimaria.belongsTo(models.Usuario); // <- Cria chave estrangeira UsuarioId nessa tabela
   }
 

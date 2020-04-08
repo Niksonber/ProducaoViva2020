@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
   var Cliente = sequelize.define('Cliente', {
     nome: DataTypes.STRING,
     demanda: DataTypes.INTEGER,
-    contato: DataTypes.STRING
+    email: DataTypes.STRING,
+    nomeRepresentante: DataTypes.STRING,
+    telefone: DataTypes.STRING
   }, {timestamps: false, freezeTableName: true});
 
   return Cliente;

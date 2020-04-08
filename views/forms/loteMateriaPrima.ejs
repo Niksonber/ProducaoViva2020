@@ -14,7 +14,7 @@
           <option value="<%= m.id %>"><%= m.nome %></option>
           <% }); %>
         </select>
-        <input class="form-control mb-3" type="number" name="qtd" placeholder="Quantidade" required></input>
+        <input class="form-control mb-3" type="number" name="qtd" step="0.001" placeholder="Quantidade" required></input>
         <select class="custom-select mb-3" name="tipo" required>
           <option selected disabled>Selecione o tipo da transação</option>
           <option value="Compra">Compra</option>

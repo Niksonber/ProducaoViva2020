@@ -2,9 +2,18 @@
 <script src="/javascripts/bootstrap.js"></script>
 <script>
     $(".pretendText").parent().addClass("pretendTextParent");
-    $(".pretendText").keyup(function(){this.size = Math.max(this.value.length, 1)});
-    $(".pretendText").toArray().forEach(x => x.size = Math.max(x.value.length, 1))
+    $(".pretendText").keyup(function(){
+        this.size = Math.max(this.value.length, 1);
+        if(this.value != this.saved_value){
+            this.parentElement.classList.add("pretendTextParentNotSaved");
+        }
+    });
+    $(".pretendText").toArray().forEach(x => {
+        x.size = Math.max(x.value.length, 1);
+        x.saved_value = x.value;
+    });
     $(".pretendText").change(function(){
+        var input = this;
         var data = {};
         data["id"] = this.getAttribute("table-id");
         data["key"] = this.name;
@@ -14,7 +23,16 @@
             data: data,
             type: "PUT",
             success: function(result) {
-                console.log(result);
+                if(result[0] == 1){
+                    input.saved_value = data["value"];
+                    input.parentElement.classList.remove("pretendTextParentNotSaved");
+                    input.parentElement.classList.remove("pretendTextParentFailed");
+                }
+                else {
+                    input.parentElement.classList.remove("pretendTextParentNotSaved");
+                    input.parentElement.classList.add("pretendTextParentFailed");
+                    alert("Ocorreu uma falha ao salvar essa alteração!");
+                }
             }
         });
     });

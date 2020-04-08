@@ -22,8 +22,8 @@ router.post('/usuario', function(req, res) {
 router.put('/usuario', function(req, res) {
   var data = {};
   data[req.body.key] = req.body.value;
-  console.log(req.body.id)
-  db.Usuario.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'email']}).then(rows => {
+  // O campo fields faz com que apenas esses campos possam ser alterados pelo update, se alguém mal-intencioando colocar key=alguma outra coisa o update não vai fazer nada
+  db.Usuario.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'email', 'telefone']}).then(rows => {
     res.send(rows);
   });
 });

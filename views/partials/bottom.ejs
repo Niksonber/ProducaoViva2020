@@ -33,6 +33,11 @@
                     input.parentElement.classList.add("pretendTextParentFailed");
                     alert("Ocorreu uma falha ao salvar essa alteração!");
                 }
+            },
+            error: function(){
+                input.parentElement.classList.remove("pretendTextParentNotSaved");
+                input.parentElement.classList.add("pretendTextParentFailed");
+                alert("Ocorreu uma falha ao salvar essa alteração!");
             }
         });
     });

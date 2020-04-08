@@ -31,3 +31,9 @@ input.pretendText {
   position: relative;
   background-color: #fff;
 }
+
+@media (max-width: 500px) {
+  .notImportant {
+    display: none;
+  }
+}

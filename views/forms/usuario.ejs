@@ -21,8 +21,8 @@
               <th></th>
               <th>Id</th>
               <th>Nome</th>
-              <th>E-mail</th>
-              <th>Telefone</th>
+              <th class="notImportant">E-mail</th>
+              <th class="notImportant">Telefone</th>
             </tr>
           </thead>
           <tbody>
@@ -31,8 +31,8 @@
               <td><a href=""><img src="/images/trash.png" width="16"/></a></td>
               <td><%= u.id %></td>
               <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="nome" value="<%= u.nome %>"></input></td>
-              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="email" value="<%= u.email %>"></input></td>
-              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="telefone" value="<%= u.telefone %>"></input></td>
+              <td class="notImportant"><input class="pretendText" type="text" table-id="<%= u.id %>" name="email" value="<%= u.email %>"></input></td>
+              <td class="notImportant"><input class="pretendText" type="text" table-id="<%= u.id %>" name="telefone" value="<%= u.telefone %>"></input></td>
             </tr>
             <% }); %>
           </tbody>

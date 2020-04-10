@@ -150,14 +150,6 @@ router.post('/loteMateriaPrima', async function(req, res) {
 
     // Obtém a matéria prima desse lote
     var materiaPrima = await lote.getMateriaPrima();
-
-    // Se o tipo da matéria prima é 'Filamento' então criamos LoteFilamento
-    if(materiaPrima.tipo == "Filamento"){
-      db.LoteFilamento.create({
-        massa_rolo: parseFloat(req.body.massa_rolo),
-        LoteMateriaPrimaId: lote.id
-      })
-    }
     
     // Atualizamos a massa da matéria prima
     materiaPrima.qtd_atual += qtd;
@@ -186,6 +178,55 @@ router.post('/loteMateriaPrima', async function(req, res) {
   }
 });
 
+router.get('/loteFilamento', async function(req, res) {
+  var data = {};
+  data.entidadesExternas = await db.EntidadeExterna.findAll();
+  data.usuarios = await db.Usuario.findAll();
+  data.lotes = await db.LoteFilamento.findAll({
+    order: [['id', 'DESC']],
+    include: [
+      {model: db.TransacaoFilamento, as: "PrimeiraTransacao", include: [db.EntidadeExterna, db.Usuario]}
+    ]
+  });
+  res.render("forms/loteFilamento", data);
+});
+
+router.post('/loteFilamento', async function(req, res) {
+  try {
+    // Quantidade a ser inserida
+    var qtd = parseInt(req.body.qtd);
+    var massa_rolo = parseFloat(req.body.massa_rolo);
+
+    // Criamos um LoteFilamento
+    var lote = await db.LoteFilamento.create({
+      PrimeiraTransacaoId: 0,
+      qtd_atual: qtd,
+      massa_rolo: massa_rolo
+    });
+
+    // Adicionamos a transação
+    var transacao = await db.TransacaoFilamento.create({
+      qtd: qtd,
+      tipo: req.body.tipo,
+      data: moment(req.body.data).toISOString(),
+      observacao: req.body.observacao,
+      LoteFilamentoId: lote.id,
+      EntidadeExternaId: req.body.EntidadeExternaId,
+      UsuarioId: req.body.UsuarioId
+    });
+
+    // Atualizamos no lote a referência à primeira transação do lote
+    lote.PrimeiraTransacaoId = transacao.id;
+    lote.save();
+
+    // Finalizamos redirecionando para o GET
+    res.redirect("loteFilamento");
+  }
+  catch(e){
+    res.send(e);
+  }
+});
+
 router.get('/loteImpressao', async function(req, res) {
   var data = {}
   data.lotes = await db.LoteImpressao.findAll({order: [['id', 'DESC']], include: db.Usuario});
@@ -202,6 +243,81 @@ router.post('/loteImpressao', async function(req, res) {
     UsuarioId: req.body.UsuarioId
   })
   .then(r => res.redirect("loteImpressao"));
+});
+
+router.get('/lote', async function(req, res) {
+  var data = {}
+  data.lotes = await db.Lote.findAll({order: [['id', 'DESC']]});
+  res.render("forms/lote", data);
+});
+
+router.post('/lote', async function(req, res) {
+  db.Lote.create({
+    data: moment(req.body.data).toISOString()
+  })
+  .then(r => res.redirect("lote"));
+});
+
+router.get('/subloteImpressao', async function(req, res) {
+  var data = {}
+  data.lotes = await db.Lote.findAll({order: [['id', 'DESC']]});
+  data.suportes = await db.SubloteImpressao.findAll({order: [['id', 'DESC']], include: [db.Lote]});
+  data.usuarios = await db.Usuario.findAll();
+  res.render("forms/subloteImpressao", data);
+});
+
+router.post('/subloteImpressao', async function(req, res) {
+  db.SubloteImpressao.create({
+    LoteId: parseInt(req.body.LoteId),
+    cod_impressora: req.body.cod_impressora,
+    UsuarioId: parseInt(req.body.UsuarioId),
+    qtd_suporte_bruto_aprovado: parseInt(req.body.qtd_suporte_bruto_aprovado || 0),
+    qtd_suporte_bruto_aproveitavel: parseInt(req.body.qtd_suporte_bruto_aproveitavel || 0),
+    qtd_suporte_bruto_descartavel: parseInt(req.body.qtd_suporte_bruto_aproveitavel || 0),
+    qtd_suporte_aprovado: parseInt(req.body.qtd_suporte_aprovado || 0),
+    qtd_suporte_aproveitavel: parseInt(req.body.qtd_suporte_aproveitavel || 0),
+    qtd_suporte_descartavel: parseInt(req.body.qtd_suporte_aproveitavel || 0)
+  })
+  .then(r => res.redirect("subloteImpressao"))
+  .catch(e => res.send(e));
+});
+
+router.get('/subloteElastico', async function(req, res) {
+  var data = {}
+  data.lotes = await db.Lote.findAll({order: [['id', 'DESC']]});
+  data.elasticos = await db.SubloteElastico.findAll({order: [['id', 'DESC']], include: [db.Lote]});
+  data.usuarios = await db.Usuario.findAll();
+  res.render("forms/subloteElastico", data);
+});
+
+router.post('/subloteElastico', async function(req, res) {
+  db.SubloteElastico.create({
+    LoteId: parseInt(req.body.LoteId),
+    UsuarioId: parseInt(req.body.UsuarioId),
+    qtd_elastico_aproveitavel: parseInt(req.body.qtd_elastico_aproveitavel || 0),
+    qtd_elastico_descartavel: parseInt(req.body.qtd_elastico_descartavel || 0)
+  })
+  .then(r => res.redirect("subloteElastico"))
+  .catch(e => res.send(e));
+});
+
+router.get('/subloteVisores', async function(req, res) {
+  var data = {}
+  data.lotes = await db.Lote.findAll({order: [['id', 'DESC']]});
+  data.visores = await db.SubloteVisores.findAll({order: [['id', 'DESC']], include: [db.Lote]});
+  data.usuarios = await db.Usuario.findAll();
+  res.render("forms/subloteVisores", data);
+});
+
+router.post('/subloteVisores', async function(req, res) {
+  db.SubloteVisores.create({
+    LoteId: parseInt(req.body.LoteId),
+    UsuarioId: parseInt(req.body.UsuarioId),
+    qtd_visores_aproveitavel: parseInt(req.body.qtd_visores_aproveitavel || 0),
+    qtd_visores_descartavel: parseInt(req.body.qtd_visores_descartavel || 0)
+  })
+  .then(r => res.redirect("subloteVisores"))
+  .catch(e => res.send(e));
 });
 
 router.get('/loteRaspagem', async function(req, res) {
@@ -254,9 +370,18 @@ router.get('/loteMontagem', async function(req, res) {
 router.get('/loteEmbalagemPrimaria', async function(req, res) {
   data = {}
   data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
-  data.loteMontagem = await db.LoteMontagem.findAll({attributes:['id']});
+  data.lotes = await db.Lote.findAll({attributes:['id']});
 
   res.render("forms/loteEmbalagemPrimaria", data);
+});
+
+router.post('/loteEmbalagemPrimaria', async function(req, res) {
+  db.LoteEmbalagemPrimaria.create({
+    data: moment(req.body.data).toISOString(),
+    LoteId: parseInt(req.body.LoteId),
+    UsuarioId: parseInt(req.body.UsuarioId)
+  })
+  .then(r => res.redirect("loteEmbalagemPrimaria"));
 });
 
 router.get('/pacoteFinal', function(req, res) {

@@ -8,13 +8,13 @@
     <% include ../partials/sidebar_top %>
 
     <h3>Embalagem primária</h3>
-    <form method="POST" class="container" action="/estoque/gerenciar/cadastrar" >
+    <form method="POST" class="container">
       <div class="form-group row">
         <div class="col-sm-10">
-          <select name="LoteMontagemId" class="custom-select">
-            <option selected="true" disabled>Lote de montagem</option>
-            <% loteMontagem.forEach(m => { %>
-              <option value="<%= m.id %>"><%= m.id %></option>
+          <select name="LoteId" class="custom-select">
+            <option selected="true" disabled>Lote</option>
+            <% lotes.forEach(m => { %>
+              <option value="<%= m.id %>"">LP<%= m.id %></option>
             <% }); %>            
           </select>
         </div>
@@ -28,6 +28,10 @@
             <% }); %>
           </select>
         </div>
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend"><span class="input-group-text">Data de embalagem</span></div>
+        <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
       </div>
       <button type="submit" class="btn btn-success" >Cadastrar</button>
     </form>

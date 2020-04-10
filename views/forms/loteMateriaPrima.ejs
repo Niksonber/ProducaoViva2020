@@ -7,6 +7,7 @@
   <body>
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar um lote de matéria-prima</h3>
+      <span style="color: orange;">Falta permitir atualizar massas em um lote</span>
       <form method="POST">
       <select class="custom-select mb-3" name="MateriaPrimaId" required>
           <option selected disabled>Selecione a matéria-prima</option>
@@ -46,6 +47,7 @@
         <table class="table">
           <thead>
             <tr>
+              <th></th>
               <th>Cód.</th>
               <th>Matéria-prima</th>
               <th>Quantidade atual do lote</th>
@@ -59,6 +61,7 @@
           <tbody>
             <% lotes.forEach(l => { %>
             <tr>
+              <td><img src="/images/edit.png" width=16/></td>
               <td>LMP<%= l.id %></td>
               <td><%= l.MateriaPrima.nome %></td>
               <td><%= l.qtd_atual %></td>

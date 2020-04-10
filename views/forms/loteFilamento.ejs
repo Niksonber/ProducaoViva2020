@@ -7,6 +7,7 @@
   <body>
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar um lote de filamento</h3>
+      <span style="color: orange;">Falta permitir atualizar massas em um lote</span>
       <form method="POST">
         <input class="form-control mb-3" type="number" name="qtd" placeholder="Quantidade de rolos" required></input>
         <input class="form-control mb-3" type="number" name="massa_rolo" step="0.001" placeholder="Massa de cada rolo" required></input>
@@ -36,11 +37,12 @@
         </select>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
-      <h3>Lotes de matéria-prima cadastrados</h3>
+      <h3>Lotes de filamento cadastrados</h3>
       <div class="table-responsive-md">
         <table class="table">
           <thead>
             <tr>
+              <th></th>
               <th>Cód.</th>
               <th>Quantidade atual do lote</th>
               <th>Data de entrada</th>
@@ -52,6 +54,7 @@
           <tbody>
             <% lotes.forEach(l => { %>
             <tr>
+              <td><img src="/images/edit.png" width=16/></td>
               <td>LF<%= l.id %></td>
               <td><%= l.qtd_atual %></td>
               <td><%= moment(l.PrimeiraTransacao.data).format('DD/MM/YYYY') %></td>

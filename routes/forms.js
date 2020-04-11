@@ -220,6 +220,36 @@ router.get('/loteMateriaPrima/historico/:id', async function(req, res) {
   res.send(data);
 });
 
+router.get('/loteMateriaPrima/desfazerTransacao/:id', async function(req, res) {
+  try {
+    var transacao = await db.TransacaoMateriaPrima.findOne({
+      where: {id: req.params.id},
+      include: [db.EntidadeExterna, db.LoteMateriaPrima]
+    })
+    var lote = await transacao.getLoteMateriaPrima();
+    var materiaPrima = await lote.getMateriaPrima();
+  
+    if(lote.PrimeiraTransacaoId == transacao.id){
+      res.send("Não é possível desfazer a primeira transação");
+    }
+    else {
+  
+      lote.qtd_atual -= transacao.qtd;
+      materiaPrima.qtd_atual -= transacao.qtd;
+  
+      lote.save();
+      materiaPrima.save();
+      transacao.destroy();
+  
+      res.redirect("../../loteMateriaPrima");
+  
+    }
+  }
+  catch(e){
+    res.send(e);
+  }
+});
+
 router.get('/loteFilamento', async function(req, res) {
   var data = {};
   data.entidadesExternas = await db.EntidadeExterna.findAll();

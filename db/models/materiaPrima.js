@@ -10,5 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     unidade: DataTypes.STRING
   }, {timestamps: false, freezeTableName: true});
 
+  MateriaPrima.prototype.nomeMassa = function(){
+    return this.nome + " (" + this.qtd_unidade + this.unidade + ")";
+  }
+
   return MateriaPrima;
 }

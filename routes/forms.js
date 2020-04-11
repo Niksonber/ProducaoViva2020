@@ -142,37 +142,15 @@ router.get('/loteMateriaPrima', async function(req, res) {
 
 router.post('/loteMateriaPrima', async function(req, res) {
   try {
-    // Quantidade a ser inserida
-    var qtd = parseFloat(req.body.qtd);
-
-    // Criamos um LoteMateriaPrima
-    var lote = await db.LoteMateriaPrima.create({
+    db.LoteMateriaPrima.createWithTransaction({
+      qtd: req.body.qtd,
       MateriaPrimaId: req.body.MateriaPrimaId,
-      PrimeiraTransacaoId: 0,
-      qtd_atual: qtd
-    });
-
-    // Obtém a matéria prima desse lote
-    var materiaPrima = await lote.getMateriaPrima();
-    
-    // Atualizamos a massa da matéria prima
-    materiaPrima.qtd_atual += qtd;
-    materiaPrima.save();
-
-    // Adicionamos a transação
-    var transacao = await db.TransacaoMateriaPrima.create({
-      qtd: qtd,
       tipo: req.body.tipo,
-      data: moment(req.body.data).toISOString(),
-      observacao: req.body.observacao,
-      LoteMateriaPrimaId: lote.id,
-      EntidadeExternaId: req.body.EntidadeExternaId,
+      data: req.body.data,
+      observacaco: req.body.observacao,
+      EntidadeExternaId: req.body.EntidadeExternaId, 
       UsuarioId: req.body.UsuarioId
     });
-
-    // Atualizamos no lote a referência à primeira transação do lote
-    lote.PrimeiraTransacaoId = transacao.id;
-    lote.save();
 
     // Finalizamos redirecionando para o GET
     res.redirect("loteMateriaPrima");
@@ -184,27 +162,16 @@ router.post('/loteMateriaPrima', async function(req, res) {
 
 router.post('/loteMateriaPrima/atualizar', async function(req, res) {
   try {
-    var qtd = (req.body.sinal == "entrada" ? 1 : -1) * parseFloat(req.body.qtd);
     var lote = await db.LoteMateriaPrima.findOne({where: {id: parseInt(req.body.LoteMateriaPrimaId)}});
-    var materiaPrima = await lote.getMateriaPrima();
-    
-    materiaPrima.qtd_atual += qtd;
-    lote.qtd_atual += qtd;
-
-    // Adicionamos a transação
-    var transacao = await db.TransacaoMateriaPrima.create({
-      qtd: qtd,
+    await lote.updateWithTransaction({
+      sinal: req.body.sinal,
+      qtd: req.body.qtd,
       tipo: req.body.tipo,
-      data: moment(req.body.data).toISOString(),
-      observacao: req.body.observacao,
-      LoteMateriaPrimaId: lote.id,
+      data: req.body.data,
+      observacaco: req.body.observacao,
       EntidadeExternaId: req.body.EntidadeExternaId,
       UsuarioId: req.body.UsuarioId
     });
-
-    // Atualizamos
-    materiaPrima.save();
-    lote.save();
 
     // Finalizamos redirecionando para o GET
     res.redirect("../loteMateriaPrima");
@@ -254,54 +221,54 @@ router.get('/loteMateriaPrima/desfazerTransacao/:id', async function(req, res) {
   }
 });
 
-router.get('/loteFilamento', async function(req, res) {
-  var data = {};
-  data.entidadesExternas = await db.EntidadeExterna.findAll();
-  data.usuarios = await db.Usuario.findAll();
-  data.lotes = await db.LoteFilamento.findAll({
-    order: [['id', 'DESC']],
-    include: [
-      {model: db.TransacaoFilamento, as: "PrimeiraTransacao", include: [db.EntidadeExterna, db.Usuario]}
-    ]
-  });
-  res.render("forms/loteFilamento", data);
-});
+// router.get('/loteFilamento', async function(req, res) {
+//   var data = {};
+//   data.entidadesExternas = await db.EntidadeExterna.findAll();
+//   data.usuarios = await db.Usuario.findAll();
+//   data.lotes = await db.LoteFilamento.findAll({
+//     order: [['id', 'DESC']],
+//     include: [
+//       {model: db.TransacaoFilamento, as: "PrimeiraTransacao", include: [db.EntidadeExterna, db.Usuario]}
+//     ]
+//   });
+//   res.render("forms/loteFilamento", data);
+// });
 
-router.post('/loteFilamento', async function(req, res) {
-  try {
-    // Quantidade a ser inserida
-    var qtd = parseInt(req.body.qtd);
-    var massa_rolo = parseFloat(req.body.massa_rolo);
+// router.post('/loteFilamento', async function(req, res) {
+//   try {
+//     // Quantidade a ser inserida
+//     var qtd = parseInt(req.body.qtd);
+//     var massa_rolo = parseFloat(req.body.massa_rolo);
 
-    // Criamos um LoteFilamento
-    var lote = await db.LoteFilamento.create({
-      PrimeiraTransacaoId: 0,
-      qtd_atual: qtd,
-      massa_rolo: massa_rolo
-    });
+//     // Criamos um LoteFilamento
+//     var lote = await db.LoteFilamento.create({
+//       PrimeiraTransacaoId: 0,
+//       qtd_atual: qtd,
+//       massa_rolo: massa_rolo
+//     });
 
-    // Adicionamos a transação
-    var transacao = await db.TransacaoFilamento.create({
-      qtd: qtd,
-      tipo: req.body.tipo,
-      data: moment(req.body.data).toISOString(),
-      observacao: req.body.observacao,
-      LoteFilamentoId: lote.id,
-      EntidadeExternaId: req.body.EntidadeExternaId,
-      UsuarioId: req.body.UsuarioId
-    });
+//     // Adicionamos a transação
+//     var transacao = await db.TransacaoFilamento.create({
+//       qtd: qtd,
+//       tipo: req.body.tipo,
+//       data: moment(req.body.data).toISOString(),
+//       observacao: req.body.observacao,
+//       LoteFilamentoId: lote.id,
+//       EntidadeExternaId: req.body.EntidadeExternaId,
+//       UsuarioId: req.body.UsuarioId
+//     });
 
-    // Atualizamos no lote a referência à primeira transação do lote
-    lote.PrimeiraTransacaoId = transacao.id;
-    lote.save();
+//     // Atualizamos no lote a referência à primeira transação do lote
+//     lote.PrimeiraTransacaoId = transacao.id;
+//     lote.save();
 
-    // Finalizamos redirecionando para o GET
-    res.redirect("loteFilamento");
-  }
-  catch(e){
-    res.send(e);
-  }
-});
+//     // Finalizamos redirecionando para o GET
+//     res.redirect("loteFilamento");
+//   }
+//   catch(e){
+//     res.send(e);
+//   }
+// });
 
 router.get('/loteImpressao', async function(req, res) {
   var data = {}
@@ -458,6 +425,62 @@ router.post('/loteEmbalagemPrimaria', async function(req, res) {
     UsuarioId: parseInt(req.body.UsuarioId)
   })
   .then(r => res.redirect("loteEmbalagemPrimaria"));
+});
+
+router.get('/processamentoElastico', async function(req, res) {
+  data = {}
+  data.loteRolosElastico = await db.LoteMateriaPrima.findAll({
+    include: {model: db.MateriaPrima, where: {tipo: "Rolo de elástico"}}
+  });
+  data.elasticos = await db.MateriaPrima.findAll({
+    where: {tipo: "Elástico manufaturado"}
+  });
+  data.entidadesExternas = await db.EntidadeExterna.findAll();
+  data.usuarios = await db.Usuario.findAll();
+  data.lotes = await db.LoteMateriaPrima.findAll({
+    order: [['id', 'DESC']],
+    include: [
+      {model: db.MateriaPrima, where: {tipo: "Elástico manufaturado"}}, 
+      {model: db.TransacaoMateriaPrima, as: "PrimeiraTransacao", include: [db.EntidadeExterna, db.Usuario]}
+    ]
+  });
+
+  res.render("forms/processamentoElastico", data);
+});
+
+router.post('/processamentoElastico', async function(req, res) {
+  try {
+    var loteRoloElastico = await db.LoteMateriaPrima.findOne({
+      where: {id: req.body.LoteRoloElasticoId}
+    });
+    // Retira rolos de elástico
+    loteRoloElastico.updateWithTransaction({
+      sinal: "saída",
+      qtd: req.body.qtd_usado,
+      tipo: "Operação interna",
+      data: req.body.data,
+      observacaco: "",
+      EntidadeExternaId: req.body.EntidadeExternaId,
+      UsuarioId: req.body.UsuarioId
+    })
+
+    // Para fazer elásticos manufaturados
+    db.LoteMateriaPrima.createWithTransaction({
+      qtd: req.body.qtd_produzido,
+      MateriaPrimaId: req.body.MateriaPrimaId,
+      tipo: "Operação interna",
+      data: req.body.data,
+      observacaco: "",
+      EntidadeExternaId: req.body.EntidadeExternaId,
+      UsuarioId: req.body.UsuarioId
+    });
+
+    res.redirect("processamentoElastico");
+    
+  } 
+  catch(e){
+    res.send(e);
+  }
 });
 
 router.get('/pacoteFinal', function(req, res) {

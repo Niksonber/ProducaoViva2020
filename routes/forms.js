@@ -128,6 +128,8 @@ router.get('/loteMateriaPrima', async function(req, res) {
   data.materiasPrimas = await db.MateriaPrima.findAll();
   data.entidadesExternas = await db.EntidadeExterna.findAll();
   data.usuarios = await db.Usuario.findAll();
+  data.tiposMateriaPrima = await db.MateriaPrima.aggregate('tipo', 'DISTINCT', {plain: false});
+  console.log(data.tiposMateriaPrima);
   data.lotes = await db.LoteMateriaPrima.findAll({
     order: [['id', 'DESC']],
     include: [

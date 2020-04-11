@@ -108,6 +108,8 @@ router.post('/materiaPrima', function(req, res) {
     nome: req.body.nome,
     tipo: req.body.tipo,
     descricao: req.body.descricao,
+    unidade: req.body.unidade,
+    qtd_unidade: parseFloat(req.body.qtd_unidade),
     qtd_atual: 0
   })
   .then(r => res.redirect("materiaPrima"));
@@ -116,7 +118,7 @@ router.post('/materiaPrima', function(req, res) {
 router.put('/materiaPrima', function(req, res) {
   var data = {};
   data[req.body.key] = req.body.value;
-  db.MateriaPrima.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'tipo', 'descricao']}).then(rows => {
+  db.MateriaPrima.update(data, {where: {id: parseInt(req.body.id)}, fields: ['nome', 'tipo', 'descricao', 'qtd_unidade', 'unidade']}).then(rows => {
     res.send(rows);
   });
 });

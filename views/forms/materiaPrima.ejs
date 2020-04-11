@@ -11,11 +11,22 @@
         <input class="form-control mb-3" type="text" name="nome" placeholder="Nome" required></input>
         <select class="custom-select mb-3" name="tipo" required>
           <option selected disabled>Selecione o tipo</option>
+          <option value="Filamento">Filamento</option>
+          <option value="PETG">PETG</option>
+          <option value="Elástico">Elástico</option>
           <option value="Matéria-prima">Matéria-prima</option>
           <option value="Equipamento">Equipamento</option>
           <option value="Material de limpeza">Material de limpeza</option>
           <option value="Embalagem">Embalagem</option>
         </select>
+        <select class="custom-select mb-3" name="unidade" required>
+          <option value="u">Item</option>
+          <option value="kg">Quilograma</option>
+          <option value="g">Grama</option>
+          <option value="l">Litros</option>
+          <option value="ml">Mililitro</option>
+        </select>
+        <input class="form-control mb-3" type="number" step="0.001" name="qtd_unidade" placeholder="Quantidade por unidade" required></input>
         <textarea class="form-control mb-3" name="descricao" placeholder="Descrição"></textarea>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
@@ -27,8 +38,11 @@
               <th>Cód.</th>
               <th>Nome</th>
               <th>Tipo</th>
+              <th>Qtd. unidade</th>
+              <th>Unidade</th>
               <th>Descrição</th>
-              <th>Quantidade disponível</th>
+              <th>Unidades</th>
+              <th>Quantidade</th>
             </tr>
           </thead>
           <tbody>
@@ -38,14 +52,28 @@
               <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="nome" value="<%= u.nome %>"></input></td>
               <td>
                 <select class="pretendText" table-id="<%= u.id %>" name="tipo" default-value="<%= u.tipo %>">
+                  <option value="Filamento">Filamento</option>
+                  <option value="PETG">PETG</option>
+                  <option value="Elástico">Elástico</option>
                   <option value="Matéria-prima">Matéria-prima</option>
                   <option value="Equipamento">Equipamento</option>
                   <option value="Material de limpeza">Material de limpeza</option>
                   <option value="Embalagem">Embalagem</option>
                 </select>
               </td>
+              <td><input class="pretendText" type="text" table-id="<%= u.id %>" name="qtd_unidade" value="<%= u.qtd_unidade %>"></input></td>
+              <td>
+                <select class="pretendText" table-id="<%= u.id %>" name="unidade" default-value="<%= u.unidade %>">
+                  <option value="u">Item</option>
+                  <option value="kg">Quilograma</option>
+                  <option value="g">Grama</option>
+                  <option value="l">Litros</option>
+                  <option value="ml">Mililitro</option>
+                </select>
+              </td>
               <td><textarea class="pretendText" type="text" table-id="<%= u.id %>" name="descricao"><%= u.descricao %></textarea></td>
               <td><%= u.qtd_atual %></td>
+              <td><%= u.qtd_atual*u.qtd_unidade %><%= u.unidade %></td>
             </tr>
             <% }); %>
           </tbody>

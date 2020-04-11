@@ -11,7 +11,7 @@
       <select class="custom-select mb-3" name="MateriaPrimaId" required>
           <option selected disabled>Selecione a matéria-prima</option>
           <% materiasPrimas.forEach(m => { %>
-          <option value="<%= m.id %>" tipo="<%= m.tipo %>"><%= m.nome %></option>
+          <option value="<%= m.id %>" tipo="<%= m.tipo %>"><%= m.nome %> (<%= m.qtd_unidade %><%= m.unidade %>)</option>
           <% }); %>
         </select>
         <input class="form-control mb-3" type="number" name="qtd" step="0.001" placeholder="Quantidade" required></input>
@@ -49,8 +49,8 @@
               <th></th>
               <th>Cód.</th>
               <th>Matéria-prima</th>
-              <th>Quantidade atual do lote</th>
-              <th>Quantidade atual da matéria-prima</th>
+              <th>Unidades</th>
+              <th>Quantidade</th>
               <th>Data de entrada</th>
               <th>Observação</th>
               <th>Entidade fornecedora</th>
@@ -65,9 +65,9 @@
                 <a data-toggle="modal" data-target=".historico" style="cursor: pointer; display: inline-block;" onclick="carregarHistorico('<%= l.id %>');"><img src="/images/history.png" width=16/></a>
               </td>
               <td>LMP<%= l.id %></td>
-              <td><%= l.MateriaPrima.nome %></td>
+              <td><%= l.MateriaPrima.nome %> (<%= l.MateriaPrima.qtd_unidade %><%= l.MateriaPrima.unidade %>)</td>
               <td><%= l.qtd_atual %></td>
-              <td><%= l.MateriaPrima.qtd_atual %></td>
+              <td><%= l.qtd_atual*l.MateriaPrima.qtd_unidade %><%= l.MateriaPrima.unidade %></td>
               <td><%= moment(l.PrimeiraTransacao.data).format('DD/MM/YYYY') %></td>
               <td><%= l.PrimeiraTransacao.observacao %></td>
               <td><%= l.PrimeiraTransacao.EntidadeExterna.nome %></td>

@@ -130,13 +130,12 @@ textarea.pretendText:focus {
 @media (max-width: 800px) {
   .sideBar {
     width: 100%;
-    position: fixed;
     overflow-y: auto;
     z-index: 10000;
     margin: 0px;
-    margin-top: 50px !important;
     border-radius: 0px;
     height: 100%;
+    position: absolute;
   }
 
   .sideBar_hidden {
@@ -144,12 +143,7 @@ textarea.pretendText:focus {
   }
 
   .topBar {
-    position: fixed;
     z-index: 10001;
-  }
-
-  .container {
-    margin-top: 75px !important;
   }
 }
 

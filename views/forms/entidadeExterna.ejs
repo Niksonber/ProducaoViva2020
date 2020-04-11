@@ -6,8 +6,8 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-      <h3>Cadastrar entidades externas</h3>
-      Uma entidade externa é qualquer entidade que recebe do LAB ou entrega para o LAB matéria-prima.
+      <h3>Cadastrar entidades</h3>
+      Uma entidade é qualquer entidade que recebe ou entrega matéria-prima para o estoque do LAB. Exemplo: "LAB - Faceshield" pode ser uma entidade que recebe do estoque filamento, álcool.
       <form method="POST">
         <input class="form-control mb-3" type="text" name="nome" placeholder="Nome" required></input>
         <input class="form-control mb-3" type="text" name="email" placeholder="E-mail"></input>
@@ -15,7 +15,7 @@
         <input class="form-control mb-3" type="text" name="telefone" placeholder="Telefone"></input>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
-      <h3>Entidades externas cadastradas</h3>
+      <h3>Entidades cadastradas</h3>
       <div class="table-responsive-md">
         <table class="table">
           <thead>

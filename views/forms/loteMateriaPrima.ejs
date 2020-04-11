@@ -7,7 +7,6 @@
   <body>
     <% include ../partials/sidebar_top %>
       <h3>Cadastrar um lote de matéria-prima</h3>
-      <span style="color: orange;">Falta permitir atualizar massas em um lote</span>
       <form method="POST">
       <select class="custom-select mb-3" name="MateriaPrimaId" required>
           <option selected disabled>Selecione a matéria-prima</option>
@@ -29,7 +28,7 @@
         </div>
         <textarea class="form-control mb-3" name="observacao" placeholder="Observação"></textarea>
         <select class="custom-select mb-3" name="EntidadeExternaId" required>
-          <option selected disabled>Selecione uma entidade externa</option>
+          <option selected disabled>Selecione a entidade fornecedora</option>
           <% entidadesExternas.forEach(e => { %>
             <option value="<%= e.id %>"><%= e.nome %></option>
           <% }); %>
@@ -54,14 +53,17 @@
               <th>Quantidade atual da matéria-prima</th>
               <th>Data de entrada</th>
               <th>Observação</th>
-              <th>Entidade externa</th>
+              <th>Entidade fornecedora</th>
               <th>Usuário do LAB</th>
             </tr>
           </thead>
           <tbody>
             <% lotes.forEach(l => { %>
             <tr>
-              <td><img src="/images/edit.png" width=16/></td>
+              <td>
+                <a data-toggle="modal" data-target=".atualizarMassa" style="cursor: pointer; display: inline-block;" onclick="$('#retirada_LoteMateriaPrimaId').val('<%= l.id %>'); $('#retirada_LMP').text('<%= l.id %>');"><img src="/images/edit.png" width=16/></a>
+                <a data-toggle="modal" data-target=".historico" style="cursor: pointer; display: inline-block;" onclick="carregarHistorico('<%= l.id %>');"><img src="/images/history.png" width=16/></a>
+              </td>
               <td>LMP<%= l.id %></td>
               <td><%= l.MateriaPrima.nome %></td>
               <td><%= l.qtd_atual %></td>
@@ -75,6 +77,95 @@
           </tbody>
         </table>
       </div>
+      
+      <!-- Atualizar massa de um lote -->
+      <div class="modal fade atualizarMassa" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content" style="padding: 20px;">
+            <h3>Atualizar quantidade do lote LMP<span id="retirada_LMP"></span></h3>
+              <form method="POST" action="/forms/loteMateriaPrima/atualizar">
+                <input style="display: none;" id="retirada_LoteMateriaPrimaId" type="text" name="LoteMateriaPrimaId" required></input>
+                <select class="custom-select mb-3" name="sinal" onchange="$('#retirada_tipo').text('Selecione uma entidade ' + (this.value=='entrada' ? 'de origem' : 'de destino'))" required>
+                  <option selected disabled>Selecione o sentido da transação</option>
+                  <option value="entrada">Entrada no estoque</option>
+                  <option value="saida">Saída do estoque</option>
+                </select>
+                <input class="form-control mb-3" type="number" name="qtd" step="0.001" placeholder="Quantidade" required></input>
+                <select class="custom-select mb-3" name="tipo" required>
+                  <option selected disabled>Selecione o tipo da transação</option>
+                  <option value="Compra">Compra</option>
+                  <option value="Doação">Doação</option>
+                  <option value="Operação externa">Operação externa</option>
+                  <option value="Operação interna">Operação interna</option>
+                </select>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+                  <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
+                </div>
+                <textarea class="form-control mb-3" name="observacao" placeholder="Observação"></textarea>
+                <select class="custom-select mb-3" name="EntidadeExternaId" required>
+                  <option id="retirada_tipo" selected disabled>Selecione uma entidade de origem</option>
+                  <% entidadesExternas.forEach(e => { %>
+                    <option value="<%= e.id %>"><%= e.nome %></option>
+                  <% }); %>
+                </select>
+                <select class="custom-select mb-3" name="UsuarioId" required>
+                  <option selected disabled>Selecione o usuário LAB responsável</option>
+                  <% usuarios.forEach(u => { %>
+                    <option value="<%= u.id %>"><%= u.nome %></option>
+                  <% }); %>
+                </select>
+                <button type="submit" class="btn btn-success" >Fazer retirada</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Histórico de um lote -->
+      <div class="modal fade historico" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content" style="padding: 20px;">
+            <h3>Histórico de LMP<span id="historico_LMP"></span></h3>
+            <div class="table-responsive-md">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Variação no estoque</th>
+                    <th>Tipo</th>
+                    <th>Data</th>
+                    <th>Entidade</th>
+                    <th>Usuário LAB</th>
+                  </tr>
+                </thead>
+                <tbody id="historico_tbody">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <script type="text/javascript">
+        function carregarHistorico(id){
+          $("#historico_LMP").text(id);
+          $.get('/forms/loteMateriaPrima/historico/' + id, data => {
+            var tbody = $("#historico_tbody");
+            tbody.html("");
+            data.transacoes.forEach(t => {
+              row = $.parseHTML("<tr><td class='qtd'></td><td class='tipo'></td><td class='data'></td><td class='entidade'></td><td class='usuario'></td></tr>");
+              $(".qtd", row).text(t.qtd);
+              $(".tipo", row).text(t.tipo);
+              $(".data", row).text(moment(t.data).format('DD/MM/YYYY'));
+              $(".entidade", row).text(t.EntidadeExterna.nome);
+              $(".usuario", row).text(t.Usuario.nome);
+              tbody.append(row);
+            });
+            console.log(data);
+          })
+        }
+      </script>
+      
     <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>

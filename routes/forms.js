@@ -178,6 +178,48 @@ router.post('/loteMateriaPrima', async function(req, res) {
   }
 });
 
+router.post('/loteMateriaPrima/atualizar', async function(req, res) {
+  try {
+    var qtd = (req.body.sinal == "entrada" ? 1 : -1) * parseFloat(req.body.qtd);
+    var lote = await db.LoteMateriaPrima.findOne({where: {id: parseInt(req.body.LoteMateriaPrimaId)}});
+    var materiaPrima = await lote.getMateriaPrima();
+    
+    materiaPrima.qtd_atual += qtd;
+    lote.qtd_atual += qtd;
+
+    // Adicionamos a transação
+    var transacao = await db.TransacaoMateriaPrima.create({
+      qtd: qtd,
+      tipo: req.body.tipo,
+      data: moment(req.body.data).toISOString(),
+      observacao: req.body.observacao,
+      LoteMateriaPrimaId: lote.id,
+      EntidadeExternaId: req.body.EntidadeExternaId,
+      UsuarioId: req.body.UsuarioId
+    });
+
+    // Atualizamos
+    materiaPrima.save();
+    lote.save();
+
+    // Finalizamos redirecionando para o GET
+    res.redirect("../loteMateriaPrima");
+  }
+  catch(e){
+    res.send(e);
+  }
+});
+
+router.get('/loteMateriaPrima/historico/:id', async function(req, res) {
+  var data = {};
+  data.transacoes = await db.TransacaoMateriaPrima.findAll({
+    where: {LoteMateriaPrimaId: req.params.id},
+    include: [db.Usuario, db.EntidadeExterna],
+    order: [['data', 'DESC'], ['id', 'DESC']]
+  });
+  res.send(data);
+});
+
 router.get('/loteFilamento', async function(req, res) {
   var data = {};
   data.entidadesExternas = await db.EntidadeExterna.findAll();

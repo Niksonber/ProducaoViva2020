@@ -20,7 +20,7 @@
           <option value="<%= m.id %>" tipo="<%= m.tipo %>" style='display: none;'><%= m.nomeMassa() %></option>
           <% }); %>
         </select>
-        <input class="form-control mb-3" type="number" name="qtd" step="0.001" placeholder="Quantidade" required></input>
+        <input class="form-control mb-3" type="number" name="qtd" step="0.001" min="0" placeholder="Quantidade" required></input>
         <select class="custom-select mb-3" name="tipo" required>
           <option selected disabled>Selecione o tipo da transação</option>
           <option value="Compra">Compra</option>
@@ -67,7 +67,7 @@
             <% lotes.forEach(l => { %>
             <tr>
               <td>
-                <a data-toggle="modal" data-target=".atualizarMassa" style="cursor: pointer; display: inline-block;" onclick="$('#retirada_LoteMateriaPrimaId').val('<%= l.id %>'); $('#retirada_LMP').text('<%= l.id %>');"><img src="/images/edit.png" width=16/></a>
+                <a data-toggle="modal" data-target=".atualizarMassa" style="cursor: pointer; display: inline-block;" onclick="atualizar('<%= l.id %>', '<%= l.qtd_atual %>');"><img src="/images/edit.png" width=16/></a>
                 <a data-toggle="modal" data-target=".historico" style="cursor: pointer; display: inline-block;" onclick="carregarHistorico('<%= l.id %>');"><img src="/images/history.png" width=16/></a>
               </td>
               <td>LMP<%= l.id %></td>
@@ -93,12 +93,12 @@
           <h3>Atualizar quantidade do lote LMP<span id="retirada_LMP"></span></h3>
             <form method="POST" action="/forms/loteMateriaPrima/atualizar">
               <input style="display: none;" id="retirada_LoteMateriaPrimaId" type="text" name="LoteMateriaPrimaId" required></input>
-              <select class="custom-select mb-3" name="sinal" onchange="$('#retirada_tipo').text('Selecione uma entidade ' + (this.value=='entrada' ? 'de origem' : 'de destino'))" required>
+              <select class="custom-select mb-3" id="retirada_sentido" name="sinal" onchange="sentido(this.value, $(this).prop('maxQtd'));" required>
                 <option selected disabled>Selecione o sentido da transação</option>
                 <option value="entrada">Entrada no estoque</option>
                 <option value="saida">Saída do estoque</option>
               </select>
-              <input class="form-control mb-3" type="number" name="qtd" step="0.001" placeholder="Quantidade" required></input>
+              <input class="form-control mb-3" id="retirada_qtd" type="number" name="qtd" step="0.001" min="0" placeholder="Quantidade" required></input>
               <select class="custom-select mb-3" name="tipo" required>
                 <option selected disabled>Selecione o tipo da transação</option>
                 <option value="Compra">Compra</option>
@@ -156,6 +156,15 @@
     </div>
   
     <script type="text/javascript">
+      function atualizar(id, currentQtd){
+        $('#retirada_LoteMateriaPrimaId').val(id);
+        $('#retirada_LMP').text(id);
+        $("#retirada_sentido").prop("maxQtd", parseInt(currentQtd));
+      }
+      function sentido(direcao, minQtd){
+        $('#retirada_tipo').text('Selecione uma entidade ' + (direcao == 'entrada' ? 'de origem' : 'de destino'))
+        $('#retirada_qtd').prop("max", (direcao == 'entrada' ? Infinity: minQtd));
+      }
       function carregarHistorico(id){
         $("#historico_LMP").text(id);
         $.get('/forms/loteMateriaPrima/historico/' + id, data => {
@@ -173,6 +182,7 @@
                 location.href = "/forms/loteMateriaPrima/desfazerTransacao/" + t.id;
               }
             });
+            if(t.allowUndo == false) $(".desfazerTrans", row).hide();
             tbody.append(row);
           });
           console.log(data);

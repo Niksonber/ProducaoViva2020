@@ -13,7 +13,6 @@
           <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
         </div>
         <select class="custom-select mb-3" name="MateriaPrimaId" required>
-          <option selected disabled>Selecione o material produzido</option>
           <% elasticos.forEach(m => { %>
           <option value="<%= m.id %>"><%= m.nomeMassa() %></option>
           <% }); %>

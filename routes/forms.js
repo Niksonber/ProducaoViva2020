@@ -170,7 +170,8 @@ router.post('/loteMateriaPrima/atualizar', async function(req, res) {
       data: req.body.data,
       observacaco: req.body.observacao,
       EntidadeExternaId: req.body.EntidadeExternaId,
-      UsuarioId: req.body.UsuarioId
+      UsuarioId: req.body.UsuarioId,
+      allowUndo: true
     });
 
     // Finalizamos redirecionando para o GET
@@ -193,28 +194,10 @@ router.get('/loteMateriaPrima/historico/:id', async function(req, res) {
 
 router.get('/loteMateriaPrima/desfazerTransacao/:id', async function(req, res) {
   try {
-    var transacao = await db.TransacaoMateriaPrima.findOne({
-      where: {id: req.params.id},
-      include: [db.EntidadeExterna, db.LoteMateriaPrima]
-    })
-    var lote = await transacao.getLoteMateriaPrima();
-    var materiaPrima = await lote.getMateriaPrima();
-  
-    if(lote.PrimeiraTransacaoId == transacao.id){
-      res.send("Não é possível desfazer a primeira transação");
-    }
-    else {
-  
-      lote.qtd_atual -= transacao.qtd;
-      materiaPrima.qtd_atual -= transacao.qtd;
-  
-      lote.save();
-      materiaPrima.save();
-      transacao.destroy();
-  
-      res.redirect("../../loteMateriaPrima");
-  
-    }
+    var result = await db.LoteMateriaPrima.undoTransaction(req.params.id);
+    
+    if(result == true) res.redirect("../../loteMateriaPrima");
+    else res.send(result);
   }
   catch(e){
     res.send(e);
@@ -461,7 +444,8 @@ router.post('/processamentoElastico', async function(req, res) {
       data: req.body.data,
       observacaco: "",
       EntidadeExternaId: req.body.EntidadeExternaId,
-      UsuarioId: req.body.UsuarioId
+      UsuarioId: req.body.UsuarioId,
+      allowUndo: false
     })
 
     // Para fazer elásticos manufaturados

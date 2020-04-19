@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     lote.PrimeiraTransacaoId = transacao.id;
     lote.save();
 
-    return true;
+    return transacao;
   }
 
   /*
@@ -81,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
     materiaPrima.save();
     this.save();
 
-    return true;
+    return transacao;
   }
 
   LoteMateriaPrima.undoTransaction = async function(TransacaoId){

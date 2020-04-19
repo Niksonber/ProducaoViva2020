@@ -493,6 +493,103 @@ router.post('/processamentoElastico', async function(req, res) {
   }
 });
 
+router.get('/processamentoPETG', async function(req, res) {
+  data = {}
+  data.lotePETG = await db.LoteMateriaPrima.findAll({
+    include: {model: db.MateriaPrima, where: {tipo: "PETG"}}
+  });
+  data.visores = await db.MateriaPrima.findAll({
+    where: {tipo: "Visor manufaturado"}
+  });
+  data.entidadesExternas = await db.EntidadeExterna.findAll({
+    include: {
+      model: db.EntidadeProcesso,
+      where: {processo: "Processamento de PETG"}
+    }
+  });
+  data.processamentos = await db.ProcessamentoPETG.findAll({
+    include: [
+      {model: db.TransacaoMateriaPrima, as: "TransacaoPETG", include: [db.EntidadeExterna, db.Usuario, {
+        model: db.LoteMateriaPrima
+      }]},
+      {model: db.TransacaoMateriaPrima, as: "TransacaoVisor", include: [db.EntidadeExterna, db.Usuario, {
+        model: db.LoteMateriaPrima
+      }]}
+    ],
+    order: [['id', 'DESC']]
+  })
+  data.usuarios = await db.Usuario.findAll();
+
+  res.render("forms/processamentoPETG", data);
+});
+
+router.post('/processamentoPETG', async function(req, res) {
+  try {
+    var lotePETG = await db.LoteMateriaPrima.findOne({
+      where: {id: req.body.LotePETGId}
+    });
+    // Retira PETG
+    var transacaoPETG = await lotePETG.updateWithTransaction({
+      sinal: "saída",
+      qtd: req.body.qtd_usado,
+      tipo: "Operação externa",
+      data: req.body.data,
+      observacaco: "",
+      EntidadeExternaId: req.body.EntidadeExternaId,
+      UsuarioId: req.body.UsuarioId,
+      allowUndo: false
+    })
+
+    if(transacaoPETG){
+      db.ProcessamentoPETG.create({
+        estado: false,
+        TransacaoPETGId: transacaoPETG.id
+      });
+    }
+    else {
+      res.send("Falha ao realizar a transação!");
+    }
+
+    res.redirect("processamentoPETG");
+    
+  } 
+  catch(e){
+    res.send(e);
+  }
+});
+
+router.post('/processamentoPETG/atualizar', async function(req, res) {
+  try {
+    var processamentoPETG = await db.ProcessamentoPETG.findOne({
+      where: {id: req.body.ProcessamentoPETGId},
+      include: [{model: db.TransacaoMateriaPrima, as: 'TransacaoPETG'}]
+    });
+
+    // Cria Visor
+    var transacaoVisor = await db.LoteMateriaPrima.createWithTransaction({
+      qtd: parseFloat(req.body.qtd_produzido),
+      MateriaPrimaId: req.body.MateriaPrimaId,
+      tipo: "Operação externa",
+      data: req.body.data,
+      observacaco: "",
+      EntidadeExternaId: processamentoPETG.TransacaoPETG.EntidadeExternaId, 
+      UsuarioId: req.body.UsuarioId
+    })
+
+    if(transacaoVisor){
+      processamentoPETG.TransacaoVisorId = transacaoVisor.id;
+      processamentoPETG.estado = true;
+      processamentoPETG.save();
+    }
+
+    res.redirect("../processamentoPETG");
+    
+  } 
+  catch(e){
+    res.send(e);
+  }
+});
+
 router.get('/pacoteFinal', function(req, res) {
   res.render("forms/pacoteFinal");
 });

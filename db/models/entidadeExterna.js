@@ -8,5 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     telefone: DataTypes.STRING
   }, {timestamps: false, freezeTableName: true});
 
+  // Relacionamento dessa entidade com outras
+  EntidadeExterna.associate = (models) => {
+    EntidadeExterna.hasMany(models.EntidadeProcesso, {foreignKey: {allowNull: false}});
+  }
+
   return EntidadeExterna;
 }

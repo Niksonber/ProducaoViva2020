@@ -13,8 +13,15 @@
           <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
         </div>
         <select class="custom-select mb-3" name="MateriaPrimaId" required>
+          <option disabled>Selecione o produto final</option>
           <% elasticos.forEach(m => { %>
           <option value="<%= m.id %>"><%= m.nomeMassa() %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" name="EntidadeExternaId" required>
+          <option disabled>Selecione a entidade produtora</option>
+          <% entidadesExternas.forEach(e => { %>
+            <option value="<%= e.id %>"><%= e.nome %></option>
           <% }); %>
         </select>
         <select class="custom-select mb-3" name="LoteRoloElasticoId" required>
@@ -29,12 +36,6 @@
           <option selected disabled>Selecione o usuário LAB responsável</option>
           <% usuarios.forEach(u => { %>
             <option value="<%= u.id %>"><%= u.nome %></option>
-          <% }); %>
-        </select>
-        <select class="custom-select mb-3" name="EntidadeExternaId" required>
-          <option selected disabled>Selecione a entidade produtora</option>
-          <% entidadesExternas.forEach(e => { %>
-            <option value="<%= e.id %>"><%= e.nome %></option>
           <% }); %>
         </select>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>

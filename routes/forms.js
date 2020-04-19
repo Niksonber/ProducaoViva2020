@@ -54,6 +54,27 @@ router.put('/usuarioExterno', function(req, res) {
   });
 });
 
+router.get('/entidadeProcesso', async function(req, res) {
+  var data = {};
+  data.entidadesExternas = await db.EntidadeExterna.findAll();
+  data.entidadesProcessos = await db.EntidadeExterna.findAll({
+    include: db.EntidadeProcesso
+  });
+  res.render("forms/entidadeProcesso", data);
+});
+
+router.post('/entidadeProcesso', function(req, res) {
+  db.EntidadeProcesso.create({
+    processo: req.body.processo,
+    EntidadeExternaId: parseInt(req.body.EntidadeExternaId)
+  })
+  .then(r => res.redirect("/forms/entidadeProcesso"));
+});
+
+router.get('/entidadeProcesso/delete/:id', function(req, res) {
+  db.EntidadeProcesso.destroy({where: {id: req.params.id}}).then(r => res.redirect("/forms/entidadeProcesso"));
+});
+
 router.get('/cliente', function(req, res) {
   db.Cliente.findAll({order: [['id', 'DESC']]}).then(r => res.render("forms/cliente", {clientes: r}));
 });
@@ -418,7 +439,12 @@ router.get('/processamentoElastico', async function(req, res) {
   data.elasticos = await db.MateriaPrima.findAll({
     where: {tipo: "Elástico manufaturado"}
   });
-  data.entidadesExternas = await db.EntidadeExterna.findAll();
+  data.entidadesExternas = await db.EntidadeExterna.findAll({
+    include: {
+      model: db.EntidadeProcesso,
+      where: {processo: "Processamento de elástico"}
+    }
+  });
   data.usuarios = await db.Usuario.findAll();
   data.lotes = await db.LoteMateriaPrima.findAll({
     order: [['id', 'DESC']],

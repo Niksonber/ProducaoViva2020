@@ -20,7 +20,7 @@
           <option value="<%= m.id %>" tipo="<%= m.tipo %>" style='display: none;'><%= m.nomeMassa() %></option>
           <% }); %>
         </select>
-        <input class="form-control mb-3" type="number" name="qtd" step="0.001" min="0" placeholder="Quantidade" required></input>
+        <input class="form-control mb-3" type="number" name="qtd" step="0.001" min="0" placeholder="Unidades" required></input>
         <select class="custom-select mb-3" name="tipo" required>
           <option selected disabled>Selecione o tipo da transação</option>
           <option value="Compra">Compra</option>

@@ -21,10 +21,10 @@
         <select class="custom-select mb-3" name="LotePETGId" required>
           <option selected disabled>Selecione o lote de PETG utilizado</option>
           <% lotePETG.forEach(m => { %>
-          <option value="<%= m.id %>">LMP<%= m.id %> - <%= m.MateriaPrima.nomeMassa() %> - Qtd. atual: <%= m.qtd_atual %></option>
+          <option value="<%= m.id %>">LMP<%= m.id %> - <%= m.MateriaPrima.nomeMassa() %> - Unidades: <%= m.qtd_atual %></option>
           <% }); %>
         </select>
-        <input class="form-control mb-3" type="number" name="qtd_usado" placeholder="Nº de PETG usado" required></input>
+        <input class="form-control mb-3" type="number" name="qtd_usado" placeholder="Unidades de PETG usado" required></input>
         <select class="custom-select mb-3" name="UsuarioId" required>
           <option selected disabled>Selecione o usuário LAB responsável</option>
           <% usuarios.forEach(u => { %>
@@ -44,10 +44,10 @@
               <th>Estado</th>
               <th>Entidade produtora</th>
               <th>Lote de origem do PETG</th>
-              <th>Quantidade de PETG usado</th>
+              <th>Unidades de PETG usado</th>
               <th>Usuário LAB PETG</th>
               <th>Data entrada visores</th>
-              <th>Quantidade de visores produzidos</th>
+              <th>Unidades de visores produzidos</th>
               <th>Usuário LAB Visor</th>
             </tr>
           </thead>

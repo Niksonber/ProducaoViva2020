@@ -6,16 +6,16 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-      <h3>Cadastrar um lote de matéria-prima</h3>
+      <h3>Cadastrar um lote de material</h3>
       <form method="POST">
         <select class="custom-select mb-3" onchange="var self=this; $('#selectMateriasPrimas option').toArray().forEach(x => {var tipo = x.getAttribute('tipo'); if(tipo == this.value || tipo == undefined){x.style.display='block'} else {x.style.display='none'}})" required>
-          <option selected disabled>Selecione o tipo de matéria-prima</option>
+          <option selected disabled>Selecione o tipo de material</option>
           <% tiposMateriaPrima.forEach(m => { %>
           <option value="<%= m.DISTINCT %>"><%= m.DISTINCT %></option>
           <% }); %>
         </select>
         <select class="custom-select mb-3" id="selectMateriasPrimas" name="MateriaPrimaId" required>
-          <option selected disabled>Selecione a matéria-prima</option>
+          <option selected disabled>Selecione o material</option>
           <% materiasPrimas.forEach(m => { %>
           <option value="<%= m.id %>" tipo="<%= m.tipo %>" style='display: none;'><%= m.nomeMassa() %></option>
           <% }); %>
@@ -47,14 +47,14 @@
         </select>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
-      <h3>Lotes de matéria-prima cadastrados</h3>
+      <h3>Lotes de material cadastrados</h3>
       <div class="table-responsive-md">
         <table class="table">
           <thead>
             <tr>
               <th></th>
               <th>Cód.</th>
-              <th>Matéria-prima</th>
+              <th>Material</th>
               <th>Unidades</th>
               <th>Quantidade</th>
               <th>Data de entrada</th>

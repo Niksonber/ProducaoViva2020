@@ -56,17 +56,28 @@
             </tr>
           </thead>
           <tbody>
-            <% suportes.forEach(s => { %>
+            <% lotessuportes.forEach(l => { %>
             <tr>
-              <td>LP<%= s.Lote.id %></td>
-              <td><%= s.cod_impressora %></td>
-              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_aprovado" value="<%= s.qtd_suporte_bruto_aprovado %>"></input></td>
-              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_aproveitavel" value="<%= s.qtd_suporte_bruto_aproveitavel %>"></input></td>
-              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_descartavel" value="<%= s.qtd_suporte_bruto_descartavel %>"></input></td>
-              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_aprovado" value="<%= s.qtd_suporte_aprovado %>"></input></td>
-              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_aproveitavel" value="<%= s.qtd_suporte_aproveitavel %>"></input></td>
-              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_descartavel" value="<%= s.qtd_suporte_descartavel %>"></input></td>
+              <td rowspan="<%= l.SubloteImpressaos.length %>">LP<%= l.id %></td>
+              <td><%= l.SubloteImpressaos[0].cod_impressora %></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_bruto_aprovado" value="<%= l.SubloteImpressaos[0].qtd_suporte_bruto_aprovado %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_bruto_aproveitavel" value="<%= l.SubloteImpressaos[0].qtd_suporte_bruto_aproveitavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_bruto_descartavel" value="<%= l.SubloteImpressaos[0].qtd_suporte_bruto_descartavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_aprovado" value="<%= l.SubloteImpressaos[0].qtd_suporte_aprovado %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_aproveitavel" value="<%= l.SubloteImpressaos[0].qtd_suporte_aproveitavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_descartavel" value="<%= l.SubloteImpressaos[0].qtd_suporte_descartavel %>"></input></td>
             </tr>
+              <% l.SubloteImpressaos.slice(1).forEach(s => { %>
+                <tr>
+                  <td><%= s.cod_impressora %></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_aprovado" value="<%= s.qtd_suporte_bruto_aprovado %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_aproveitavel" value="<%= s.qtd_suporte_bruto_aproveitavel %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_descartavel" value="<%= s.qtd_suporte_bruto_descartavel %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_aprovado" value="<%= s.qtd_suporte_aprovado %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_aproveitavel" value="<%= s.qtd_suporte_aproveitavel %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_descartavel" value="<%= s.qtd_suporte_descartavel %>"></input></td>
+                </tr>
+              <% }); %>
             <% }); %>
           </tbody>
         </table>

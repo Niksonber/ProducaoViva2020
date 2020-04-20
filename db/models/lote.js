@@ -6,5 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     qtd_faceshields: DataTypes.INTEGER
   }, {timestamps: false, freezeTableName: true});
 
+  // Relacionamento dessa entidade com outras
+  Lote.associate = (models) => {
+    Lote.hasMany(models.SubloteImpressao, {foreignKey: {allowNull: false}});
+  }
+
   return Lote;
 }

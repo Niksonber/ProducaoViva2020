@@ -308,7 +308,8 @@ router.post('/lote', async function(req, res) {
 router.get('/subloteImpressao', async function(req, res) {
   var data = {}
   data.lotes = await db.Lote.findAll({order: [['id', 'DESC']]});
-  data.suportes = await db.SubloteImpressao.findAll({order: [['id', 'DESC']], include: [db.Lote]});
+  data.lotessuportes = await db.Lote.findAll({include: [{model: db.SubloteImpressao, required: true}], order: [['id', 'DESC'], [db.SubloteImpressao, 'cod_impressora', 'ASC']]});
+  //data.suportes = await db.SubloteImpressao.findAll({order: [['id', 'DESC']], include: [db.Lote]});
   data.usuarios = await db.Usuario.findAll();
   res.render("forms/subloteImpressao", data);
 });

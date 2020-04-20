@@ -48,17 +48,20 @@
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
       <h3>Lotes de material cadastrados</h3>
+      <input placeholder="Pesquisa por código" type="text" id="buscaCod" autofocus></input>
+      <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
+      <div class="pagesBar responsive_buttons" style="margin-bottom: 10px;"></div>
       <div class="table-responsive-md">
-        <table class="table">
+        <table id="responsive" class="table">
           <thead>
             <tr>
-              <th></th>
-              <th>Cód.</th>
+              <th class="notSortable notFiltrable" style="width: 46px;"></th>
+              <th class="notFiltrable">Cód.</th>
               <th>Material</th>
-              <th>Unidades</th>
-              <th>Quantidade</th>
-              <th>Data de entrada</th>
-              <th>Observação</th>
+              <th class="notFiltrable">Unidades</th>
+              <th class="notFiltrable">Quantidade</th>
+              <th class="filterDate">Data de entrada</th>
+              <th class="notFiltrable notSortable">Observação</th>
               <th>Entidade fornecedora</th>
               <th>Usuário do LAB</th>
             </tr>
@@ -66,16 +69,16 @@
           <tbody>
             <% lotes.forEach(l => { %>
             <tr>
-              <td>
+              <td class="notSortable notFiltrable">
                 <a data-toggle="modal" data-target=".atualizarMassa" style="cursor: pointer; display: inline-block;" onclick="atualizar('<%= l.id %>', '<%= l.qtd_atual %>');"><img src="/images/edit.png" width=16/></a>
                 <a data-toggle="modal" data-target=".historico" style="cursor: pointer; display: inline-block;" onclick="carregarHistorico('<%= l.id %>');"><img src="/images/history.png" width=16/></a>
               </td>
-              <td>LMP<%= l.id %></td>
+              <td class="notFiltrable">LMP<%= l.id %></td>
               <td><%= l.MateriaPrima.nomeMassa() %></td>
-              <td><%= l.qtd_atual %></td>
-              <td><%= l.qtd_atual*l.MateriaPrima.qtd_unidade %><%= l.MateriaPrima.unidade %></td>
-              <td><%= moment(l.PrimeiraTransacao.data).format('DD/MM/YYYY') %></td>
-              <td><%= l.PrimeiraTransacao.observacao %></td>
+              <td class="notFiltrable"><%= l.qtd_atual %></td>
+              <td class="notFiltrable"><%= l.qtd_atual*l.MateriaPrima.qtd_unidade %><%= l.MateriaPrima.unidade %></td>
+              <td class="filterDate"><%= moment(l.PrimeiraTransacao.data).format('YYYY-MM-DD') %></td>
+              <td class="notFiltrable notSortable"><%= l.PrimeiraTransacao.observacao %></td>
               <td><%= l.PrimeiraTransacao.EntidadeExterna.nome %></td>
               <td><%= l.PrimeiraTransacao.Usuario.nome %></td>
             </tr>
@@ -188,6 +191,25 @@
           console.log(data);
         })
       }
+    </script>
+
+
+    <script type="text/javascript">
+    
+      var responsiveTable = new ResponsiveTable("responsive");
+      var responsiveTableSorter = new ResponsiveTableSorter();
+      var responsiveTableFilter = new ResponsiveTableFilter();
+      var responsiveTableCodFilter = new ResponsiveTableCodFilter("Cód.", "buscaCod");
+      var responsiveTableCounter = new ResponsiveTableRowsCounter();
+    
+      responsiveTable.appendModule(responsiveTableSorter);
+      responsiveTable.appendModule(responsiveTableCodFilter);
+      responsiveTable.appendModule(responsiveTableFilter);
+      responsiveTable.appendModule(responsiveTableCounter);
+      //responsiveTable.appendModule();
+    
+      responsiveTable.init();
+      
     </script>
       
   </body>

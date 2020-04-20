@@ -41,14 +41,18 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Cód. Lote</th>
-              <th>Impressora</th>
-              <th>SBA</th>
-              <th>SB NCA</th>
-              <th>SB NCD</th>
-              <th>SA</th>
-              <th>S NCA</th>
-              <th>S NCD</th>
+              <th rowspan="2">Cód. Lote</th>
+              <th rowspan="2">Impressora</th>
+              <th colspan="3">Suporte bruto</th>
+              <th colspan="3">Suporte</th>
+            </tr>
+            <tr>
+              <th>Aprovado</th>
+              <th>Aproveitável</th>
+              <th>Descartável</th>
+              <th>Aprovado</th>
+              <th>Aproveitável</th>
+              <th>Descartável</th>
             </tr>
           </thead>
           <tbody>
@@ -56,12 +60,12 @@
             <tr>
               <td>LP<%= s.Lote.id %></td>
               <td><%= s.cod_impressora %></td>
-              <td><%= s.qtd_suporte_bruto_aprovado %></td>
-              <td><%= s.qtd_suporte_bruto_aproveitavel %></td>
-              <td><%= s.qtd_suporte_bruto_descartavel %></td>
-              <td><%= s.qtd_suporte_aprovado %></td>
-              <td><%= s.qtd_suporte_aproveitavel %></td>
-              <td><%= s.qtd_suporte_descartavel %></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_aprovado" value="<%= s.qtd_suporte_bruto_aprovado %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_aproveitavel" value="<%= s.qtd_suporte_bruto_aproveitavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_descartavel" value="<%= s.qtd_suporte_bruto_descartavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_aprovado" value="<%= s.qtd_suporte_aprovado %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_aproveitavel" value="<%= s.qtd_suporte_aproveitavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_descartavel" value="<%= s.qtd_suporte_descartavel %>"></input></td>
             </tr>
             <% }); %>
           </tbody>

@@ -329,6 +329,14 @@ router.post('/subloteImpressao', async function(req, res) {
   .catch(e => res.send(e));
 });
 
+router.put('/subloteImpressao', function(req, res) {
+  var data = {};
+  data[req.body.key] = req.body.value;
+  db.SubloteImpressao.update(data, {where: {id: parseInt(req.body.id)}, fields: ['qtd_suporte_bruto_aprovado', 'qtd_suporte_bruto_aproveitavel', 'qtd_suporte_bruto_descartavel', 'qtd_suporte_aprovado', 'qtd_suporte_aproveitavel', 'qtd_suporte_descartavel']}).then(rows => {
+    res.send(rows);
+  });
+});
+
 router.get('/subloteElastico', async function(req, res) {
   var data = {}
   data.lotes = await db.Lote.findAll({order: [['id', 'DESC']]});

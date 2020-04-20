@@ -463,7 +463,7 @@ router.post('/processamentoElastico', async function(req, res) {
       where: {id: req.body.LoteRoloElasticoId}
     });
     // Retira rolos de elástico
-    loteRoloElastico.updateWithTransaction({
+    var transacaoElastico = await loteRoloElastico.updateWithTransaction({
       sinal: "saída",
       qtd: req.body.qtd_usado,
       tipo: "Operação interna",
@@ -472,20 +472,26 @@ router.post('/processamentoElastico', async function(req, res) {
       EntidadeExternaId: req.body.EntidadeExternaId,
       UsuarioId: req.body.UsuarioId,
       allowUndo: false
-    })
-
-    // Para fazer elásticos manufaturados
-    db.LoteMateriaPrima.createWithTransaction({
-      qtd: req.body.qtd_produzido,
-      MateriaPrimaId: req.body.MateriaPrimaId,
-      tipo: "Operação interna",
-      data: req.body.data,
-      observacaco: "",
-      EntidadeExternaId: req.body.EntidadeExternaId,
-      UsuarioId: req.body.UsuarioId
     });
 
-    res.redirect("processamentoElastico");
+    if(transacaoElastico){
+      // Para fazer elásticos manufaturados
+      db.LoteMateriaPrima.createWithTransaction({
+        qtd: req.body.qtd_produzido,
+        MateriaPrimaId: req.body.MateriaPrimaId,
+        tipo: "Operação interna",
+        data: req.body.data,
+        observacaco: "",
+        EntidadeExternaId: req.body.EntidadeExternaId,
+        UsuarioId: req.body.UsuarioId
+      });
+
+      res.redirect("processamentoElastico");
+    }
+    else {
+      res.send("Falha ao realizar a transação!");
+    }
+
     
   } 
   catch(e){

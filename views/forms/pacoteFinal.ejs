@@ -6,13 +6,93 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
+      <h3>Pacotes finais</h3>
+      <form method="POST">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+          <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
+        </div>
+        <input class="form-control mb-3" type="number" name="qtd_faceshields" step="1" min="0" placeholder="Unidades de faceshield" required></input>
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <h5>Lotes de origem <img src="/images/add.png" width=16 onclick="addTemplate();" style="cursor: pointer;"/></h5>
+        <div class="replicateArea">
+          <div class="template">
+            <select class="custom-select mb-3" name="LoteId[]" required>
+              <option selected disabled>Selecione um lote de origem</option>
+              <% lotes.forEach(l => { %>
+                <option value="<%= l.id %>">LP<%= l.id %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Pacotes finais</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cód.</th>
+              <th>Data</th>
+              <th>Qtd. Faceshields</th>
+              <th>Lotes de origem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% pacotes.forEach(u => { %>
+              <tr>
+                <td>PF<%= u.id %></td>
+                <td><%= moment(u.data).format('DD/MM/YYYY') %></td>
+                <td><%= u.qtd_faceshields %></td>
+                <td>
+                  <div><a data-toggle="modal" data-target=".adicionarLote" style="cursor: pointer;" onclick="$('#pacote_id').text('<%= u.id %>'); $('#pacote_id_input').val('<%= u.id %>')"><img src="/images/add.png" width=16 style="margin-right: 10px;"/>Adicionar lote</a></div>
+                  <ul>
+                    <% u.PacoteFinalLotes.forEach(p => { %>
+                      <li><a href="pacoteFinal/delete/<%= p.id %>"><img src='/images/trash.png' width=16 style='margin-right: 5px;'/></a>LP<%= p.LoteId %></li>
+                    <% }); %>
+                  </ul>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+    <% include ../partials/sidebar_bottom %>
 
 
+    <!-- Atualizar massa de um lote -->
+    <div class="modal fade adicionarLote" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+          <h3>Adicionar lote ao pacote PF<span id="pacote_id"></span></h3>
+            <form method="POST" action="pacoteFinal/add">
+              <input style="display: none;" id="pacote_id_input" type="text" name="PacoteFinalId" required></input>
+              <select class="custom-select mb-3" name="LoteId" required>
+                <option selected disabled>Selecione um lote de origem</option>
+                <% lotes.forEach(l => { %>
+                  <option value="<%= l.id %>">LP<%= l.id %></option>
+                <% }); %>
+              </select>
+              <button type="submit" class="btn btn-success" >Adicionar</button>
+          </form>
+        </div>
+      </div>
+    </div>
 
-        <h3>Formilário de Aqui</h3>
+    <script type="text/javascript">
+      function addTemplate(){
+        var template = $('.template').html();
+        var html = "<div class='templateChild' style='display: flex;'><div style='flex-grow: 100;'>" + template + "</div><span style='padding-left: 10px;'><img src='/images/minus.png' width=16 style='cursor: pointer; vertical-align: middle;' onclick='this.parentElement.parentElement.remove();'/></span></div>";
+        $('.replicateArea').append(html);
+      }
+    </script>
 
-
-  <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>
 </html>

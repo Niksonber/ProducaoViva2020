@@ -605,8 +605,46 @@ router.post('/processamentoPETG/atualizar', async function(req, res) {
   }
 });
 
-router.get('/pacoteFinal', function(req, res) {
-  res.render("forms/pacoteFinal");
+router.get('/pacoteFinal', async function(req, res) {
+  var data = {};
+  data.usuarios = await db.Usuario.findAll();
+  data.lotes = await db.Lote.findAll();
+  data.pacotes = await db.PacoteFinal.findAll({
+    include: db.PacoteFinalLote,
+    order: [['id', 'DESC'], [db.PacoteFinalLote, 'LoteId', 'ASC']]
+  });
+  res.render("forms/pacoteFinal", data);
+});
+
+router.post('/pacoteFinal', async function(req, res) {
+  var pacoteFinal = await db.PacoteFinal.create({
+    qtd_faceshields: parseInt(req.body.qtd_faceshields),
+    data: moment(req.body.data).toISOString(),
+    UsuarioId: parseInt(req.body.UsuarioId)
+  });
+
+  req.body['LoteId[]'].forEach(l => {
+    db.PacoteFinalLote.create({
+      LoteId: parseInt(l),
+      PacoteFinalId: parseInt(pacoteFinal.id)
+    })
+  });
+
+  res.redirect("pacoteFinal");
+});
+
+router.get('/pacoteFinal/delete/:id', function(req, res) {
+  db.PacoteFinalLote.destroy({
+    where: {id: parseInt(req.params.id)}
+  }).then(r => res.redirect("../../pacoteFinal"));
+});
+
+router.post('/pacoteFinal/add', function(req, res) {
+  console.log(req.body);
+  db.PacoteFinalLote.create({
+    LoteId: parseInt(req.body.LoteId),
+    PacoteFinalId: parseInt(req.body.PacoteFinalId)
+  }).then(r => res.redirect("../pacoteFinal"));
 });
 
 router.get('/entregaFinal', function(req, res) {

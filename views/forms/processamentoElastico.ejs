@@ -11,23 +11,17 @@
         <div class="input-group mb-3">
           <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
           <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
-        </div>
+        </div >
         <select class="custom-select mb-3" name="MateriaPrimaId" required>
-          <option disabled>Selecione o produto final</option>
+          <option selected disabled>Selecione o material produzido</option>
           <% elasticos.forEach(m => { %>
           <option value="<%= m.id %>"><%= m.nomeMassa() %></option>
-          <% }); %>
-        </select>
-        <select class="custom-select mb-3" name="EntidadeExternaId" required>
-          <option disabled>Selecione a entidade produtora</option>
-          <% entidadesExternas.forEach(e => { %>
-            <option value="<%= e.id %>"><%= e.nome %></option>
           <% }); %>
         </select>
         <select class="custom-select mb-3" name="LoteRoloElasticoId" required>
           <option selected disabled>Selecione o lote de rolos de elástico utilizado</option>
           <% loteRolosElastico.forEach(m => { %>
-          <option value="<%= m.id %>">LMP<%= m.id %> - <%= m.MateriaPrima.nomeMassa() %> - Qtd. atual: <%= m.qtd_atual %></option>
+          <option value="<%= m.id %>">LMP<%= m.id %> - <%= m.MateriaPrima.nomeMassa() %></option>
           <% }); %>
         </select>
         <input class="form-control mb-3" type="number" name="qtd_usado" placeholder="Nº de rolos usado" required></input>
@@ -38,6 +32,12 @@
             <option value="<%= u.id %>"><%= u.nome %></option>
           <% }); %>
         </select>
+        <select class="custom-select mb-3" name="EntidadeExternaId" required>
+          <option selected disabled>Selecione a entidade produtora</option>
+          <% entidadesExternas.forEach(e => { %>
+            <option value="<%= e.id %>"><%= e.nome %></option>
+          <% }); %>
+        </select>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
       </form>
       <h3>Lotes de elásticos cadastrados</h3>
@@ -46,7 +46,7 @@
           <thead>
             <tr>
               <th>Cód.</th>
-              <th>Material</th>
+              <th>Matéria-prima</th>
               <th>Unidades</th>
               <th>Quantidade</th>
               <th>Data de entrada</th>

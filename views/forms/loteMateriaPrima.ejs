@@ -6,95 +6,212 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-      <h3>Cadastrar um lote de matéria-prima</h3>
+      <h3>Cadastrar um lote de material</h3>
       <form method="POST">
-        <div class="form-group row">
-          <div class="col-sm-10">
-            <select name="MateriaPrimaId" class="custom-select" id="MateriaPrimaId" selectedIndex="0">
-              <option selected="true" disabled>Matéria-prima </option>
-              <% materiasPrimas.forEach(m => { %>
-                <option value="<%= m.id %>"><%= m.nome %></option>
-              <% }); %>
-            </select>
-          </div>
+        <select class="custom-select mb-3" onchange="var self=this; $('#selectMateriasPrimas option').toArray().forEach(x => {var tipo = x.getAttribute('tipo'); if(tipo == this.value || tipo == undefined){x.style.display='block'} else {x.style.display='none'}})" required>
+          <option selected disabled>Selecione o tipo de material</option>
+          <% tiposMateriaPrima.forEach(m => { %>
+          <option value="<%= m.DISTINCT %>"><%= m.DISTINCT %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" id="selectMateriasPrimas" name="MateriaPrimaId" required>
+          <option selected disabled>Selecione o material</option>
+          <% materiasPrimas.forEach(m => { %>
+          <option value="<%= m.id %>" tipo="<%= m.tipo %>" style='display: none;'><%= m.nomeMassa() %></option>
+          <% }); %>
+        </select>
+        <input class="form-control mb-3" type="number" name="qtd" step="0.001" min="0" placeholder="Unidades" required></input>
+        <select class="custom-select mb-3" name="tipo" required>
+          <option selected disabled>Selecione o tipo da transação</option>
+          <option value="Compra">Compra</option>
+          <option value="Doação">Doação</option>
+          <option value="Operação externa">Operação externa</option>
+          <option value="Operação interna">Operação interna</option>
+        </select>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+          <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
         </div>
-        <div class="form-group row">
-          <div class="col-sm-10">
-            <input type="number" step="1" name='qtd' min="1" class="form-control col" placeholder="Quantidade" required>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-10">
-            <select name="tipo" class="custom-select" id="tipo" selectedIndex="0">
-              <option selected="true" disabled>Tipo da transação </option>
-              <option value="Compra">Compra</option>
-              <option value="Doação">Doação</option>
-              <option value="Operação externa">Operação externa</option>
-              <option value="Operação interna">Operação interna</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-10">
-            <input placeholder="Data" type="text"  class="form-control" name="data" onfocus="(this.type='date')"></input>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-10">
-            <input type="text" name='observacao' class="form-control col" placeholder="Observação">
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-10">
-            <select name="EntidadeExternaId" class="custom-select" id="EntidadeExternaId" selectedIndex="0">
-              <option selected="true" disabled>Entidade externa</option>
-              <% entidadesExternas.forEach(e => { %>
-                <option value="<%= e.id %>"><%= e.nome %></option>
-              <% }); %>
-            </select>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-10">
-            <select name="UsuarioId" class="custom-select" id="UsuarioId" selectedIndex="0">
-              <option selected="true" disabled>Usuário do LAB responsável</option>
+        <textarea class="form-control mb-3" name="observacao" placeholder="Observação"></textarea>
+        <select class="custom-select mb-3" name="EntidadeExternaId" required>
+          <option selected disabled>Selecione a entidade fornecedora</option>
+          <% entidadesExternas.forEach(e => { %>
+            <option value="<%= e.id %>"><%= e.nome %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Lotes de material cadastrados</h3>
+      <input placeholder="Pesquisa por código" type="text" id="buscaCod" autofocus></input>
+      <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
+      <div class="pagesBar responsive_buttons" style="margin-bottom: 10px;"></div>
+      <div class="table-responsive-md">
+        <table id="responsive" class="table">
+          <thead>
+            <tr>
+              <th class="notSortable notFiltrable" style="width: 46px;"></th>
+              <th class="notFiltrable">Cód.</th>
+              <th>Material</th>
+              <th class="notFiltrable">Unidades</th>
+              <th class="notFiltrable">Quantidade</th>
+              <th class="filterDate">Data de entrada</th>
+              <th class="notFiltrable notSortable">Observação</th>
+              <th>Entidade fornecedora</th>
+              <th>Usuário do LAB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lotes.forEach(l => { %>
+            <tr>
+              <td class="notSortable notFiltrable">
+                <a data-toggle="modal" data-target=".atualizarMassa" style="cursor: pointer; display: inline-block;" onclick="atualizar('<%= l.id %>', '<%= l.qtd_atual %>');"><img src="/images/edit.png" width=16/></a>
+                <a data-toggle="modal" data-target=".historico" style="cursor: pointer; display: inline-block;" onclick="carregarHistorico('<%= l.id %>');"><img src="/images/history.png" width=16/></a>
+              </td>
+              <td class="notFiltrable">LMP<%= l.id %></td>
+              <td><%= l.MateriaPrima.nomeMassa() %></td>
+              <td class="notFiltrable"><%= l.qtd_atual %></td>
+              <td class="notFiltrable"><%= l.qtd_atual*l.MateriaPrima.qtd_unidade %><%= l.MateriaPrima.unidade %></td>
+              <td class="filterDate"><%= moment(l.PrimeiraTransacao.data).format('YYYY-MM-DD') %></td>
+              <td class="notFiltrable notSortable"><%= l.PrimeiraTransacao.observacao %></td>
+              <td><%= l.PrimeiraTransacao.EntidadeExterna.nome %></td>
+              <td><%= l.PrimeiraTransacao.Usuario.nome %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+    <% include ../partials/sidebar_bottom %>
+    
+    <!-- Atualizar massa de um lote -->
+    <div class="modal fade atualizarMassa" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+          <h3>Atualizar quantidade do lote LMP<span id="retirada_LMP"></span></h3>
+            <form method="POST" action="/forms/loteMateriaPrima/atualizar">
+              <input style="display: none;" id="retirada_LoteMateriaPrimaId" type="text" name="LoteMateriaPrimaId" required></input>
+              <select class="custom-select mb-3" id="retirada_sentido" name="sinal" onchange="sentido(this.value, $(this).prop('maxQtd'));" required>
+                <option selected disabled>Selecione o sentido da transação</option>
+                <option value="entrada">Entrada no estoque</option>
+                <option value="saida">Saída do estoque</option>
+              </select>
+              <input class="form-control mb-3" id="retirada_qtd" type="number" name="qtd" step="0.001" min="0" placeholder="Quantidade" required></input>
+              <select class="custom-select mb-3" name="tipo" required>
+                <option selected disabled>Selecione o tipo da transação</option>
+                <option value="Compra">Compra</option>
+                <option value="Doação">Doação</option>
+                <option value="Operação externa">Operação externa</option>
+                <option value="Operação interna">Operação interna</option>
+              </select>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+                <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
+              </div>
+              <textarea class="form-control mb-3" name="observacao" placeholder="Observação"></textarea>
+              <select class="custom-select mb-3" name="EntidadeExternaId" required>
+                <option id="retirada_tipo" selected disabled>Selecione uma entidade de origem</option>
+                <% entidadesExternas.forEach(e => { %>
+                  <option value="<%= e.id %>"><%= e.nome %></option>
+                <% }); %>
+              </select>
+              <select class="custom-select mb-3" name="UsuarioId" required>
+                <option selected disabled>Selecione o usuário LAB responsável</option>
                 <% usuarios.forEach(u => { %>
                   <option value="<%= u.id %>"><%= u.nome %></option>
                 <% }); %>
               </select>
+              <button type="submit" class="btn btn-success" >Realizar transação</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico de um lote -->
+    <div class="modal fade historico" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+          <h3>Histórico de LMP<span id="historico_LMP"></span></h3>
+          <div class="table-responsive-md">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Desfazer</th>
+                  <th>Variação no estoque</th>
+                  <th>Tipo</th>
+                  <th>Data</th>
+                  <th>Entidade</th>
+                  <th>Usuário LAB</th>
+                </tr>
+              </thead>
+              <tbody id="historico_tbody">
+
+              </tbody>
+            </table>
           </div>
         </div>
-        <button type="submit" class="btn btn-success">Cadastrar</button>
-      </form>
-      <br/>
-      <h3>Lotes de matéria-prima cadastradas</h3>
-      <table>
-        <tbody>
-          <tr>
-            <td>Id</td>
-            <td>Matéria-prima</td>
-            <td>Quantidade atual do lote</td>
-            <td>Quantidade atual da matéria-prima</td>
-            <td>Data de entrada</td>
-            <td>Observação</td>
-            <td>Entidade externa</td>
-            <td>Usuário do LAB</td>
-          </tr>
-          <% lotes.forEach(l => { %>
-          <tr>
-            <td><%= l.id %></td>
-            <td><%= l.MateriaPrima.nome %></td>
-            <td><%= l.qtd_atual %></td>
-            <td><%= l.MateriaPrima.qtd_atual %></td>
-            <td><%= moment(l.PrimeiraTransacao.data).format('DD/MM/YYYY') %></td>
-            <td><%= l.PrimeiraTransacao.observacao %></td>
-            <td><%= l.PrimeiraTransacao.EntidadeExterna.nome %></td>
-            <td><%= l.PrimeiraTransacao.Usuario.nome %></td>
-          </tr>
-          <% }); %>
-        </tbody>
-      </table>
-    <% include ../partials/sidebar_bottom %>
+      </div>
+    </div>
+  
+    <script type="text/javascript">
+      function atualizar(id, currentQtd){
+        $('#retirada_LoteMateriaPrimaId').val(id);
+        $('#retirada_LMP').text(id);
+        $("#retirada_sentido").prop("maxQtd", parseInt(currentQtd));
+      }
+      function sentido(direcao, minQtd){
+        $('#retirada_tipo').text('Selecione uma entidade ' + (direcao == 'entrada' ? 'de origem' : 'de destino'))
+        $('#retirada_qtd').prop("max", (direcao == 'entrada' ? Infinity: minQtd));
+      }
+      function carregarHistorico(id){
+        $("#historico_LMP").text(id);
+        $.get('/forms/loteMateriaPrima/historico/' + id, data => {
+          var tbody = $("#historico_tbody");
+          tbody.html("");
+          data.transacoes.forEach(t => {
+            row = $.parseHTML("<tr><td><a class='desfazerTrans' style='cursor: pointer;'><img src='/images/undo.png' width=16/></a></td><td class='qtd'></td><td class='tipo'></td><td class='data'></td><td class='entidade'></td><td class='usuario'></td></tr>");
+            $(".qtd", row).text(t.qtd);
+            $(".tipo", row).text(t.tipo);
+            $(".data", row).text(moment(t.data).format('DD/MM/YYYY'));
+            $(".entidade", row).text(t.EntidadeExterna.nome);
+            $(".usuario", row).text(t.Usuario.nome);
+            $(".desfazerTrans", row).click(function(){
+              if(confirm("Tem certeza que deseja desfazer essa transação?")){
+                location.href = "/forms/loteMateriaPrima/desfazerTransacao/" + t.id;
+              }
+            });
+            if(t.allowUndo == false) $(".desfazerTrans", row).hide();
+            tbody.append(row);
+          });
+          console.log(data);
+        })
+      }
+    </script>
+
+
+    <script type="text/javascript">
+    
+      var responsiveTable = new ResponsiveTable("responsive");
+      var responsiveTableSorter = new ResponsiveTableSorter();
+      var responsiveTableFilter = new ResponsiveTableFilter();
+      var responsiveTableCodFilter = new ResponsiveTableCodFilter("Cód.", "buscaCod");
+      var responsiveTableCounter = new ResponsiveTableRowsCounter();
+    
+      responsiveTable.appendModule(responsiveTableSorter);
+      responsiveTable.appendModule(responsiveTableCodFilter);
+      responsiveTable.appendModule(responsiveTableFilter);
+      responsiveTable.appendModule(responsiveTableCounter);
+      //responsiveTable.appendModule();
+    
+      responsiveTable.init();
+      
+    </script>
+      
   </body>
   <% include ../partials/bottom %>
 </html>

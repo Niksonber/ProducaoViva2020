@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Formulário</title>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <% include ../partials/sidebar_top %>
+      <h3>Cadastrar processamento de PETG</h3>
+      <form method="POST">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Data de saída do PETG</span></div>
+          <input class="form-control" type="date" name="dataSaida" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
+        </div>
+        <select class="custom-select mb-3" name="EntidadeExternaId" required>
+          <option disabled>Selecione a entidade produtora</option>
+          <% entidadesExternas.forEach(e => { %>
+            <option value="<%= e.id %>"><%= e.nome %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" name="LotePETGId" required>
+          <option selected disabled>Selecione o lote de PETG utilizado</option>
+          <% lotePETG.forEach(m => { %>
+          <option value="<%= m.id %>">LMP<%= m.id %> - <%= m.MateriaPrima.nomeMassa() %> - Unidades: <%= m.qtd_atual %></option>
+          <% }); %>
+        </select>
+        <input class="form-control mb-3" type="number" name="qtd_usado" placeholder="Unidades de PETG usado" required></input>
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Processamentos de PETG</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Cód.</th>
+              <th>Data saída PETG</th>
+              <th>Estado</th>
+              <th>Entidade produtora</th>
+              <th>Lote de origem do PETG</th>
+              <th>Unidades de PETG usado</th>
+              <th>Usuário LAB PETG</th>
+              <th>Data entrada visores</th>
+              <th>Unidades de visores produzidos</th>
+              <th>Usuário LAB Visor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% processamentos.forEach(u => { %>
+            <tr>
+              <td>
+                <% if(!u.estado) { %>
+                <a data-toggle="modal" data-target=".atualizarProcessamento" style='cursor: pointer;' onclick="atualizarPETG('<%= u.id %>')"><img src='/images/edit.png' width=16/></a>
+                <% } %>
+              </td>
+              <td>LP<%= u.id %></td>
+              <td><%= moment(u.TransacaoPETG.data).format('DD/MM/YYYY') %></td>
+              <td><%= u.estado ? 'Concluída' : 'Aguardando retorno' %></td>
+              <td><%= u.TransacaoPETG.EntidadeExterna.nome %></td>
+              <td>LMP<%= u.TransacaoPETG.LoteMateriaPrima.id %></td>
+              <td><%= -u.TransacaoPETG.qtd %></td>
+              <td><%= u.TransacaoPETG.Usuario.nome %></td>
+              <td><%= u.TransacaoVisor ? moment(u.TransacaoVisor.data).format('DD/MM/YYYY') : '---' %></td>
+              <td><%= u.TransacaoVisor ? u.TransacaoVisor.qtd : '---' %></td>
+              <td><%= u.TransacaoVisor ? u.TransacaoVisor.Usuario.nome : '---' %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% include ../partials/sidebar_bottom %>
+
+    <!-- Atualizar estado do processamento -->
+    <div class="modal fade atualizarProcessamento" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 20px;">
+          <h3>Finalizar processamento de LP<span id="atualizar_id"></span></h3>
+            <form method="POST" action="/forms/processamentoPETG/atualizar">
+              <input style="display: none;" id="atualizar_ProcessamentoPETGId" type="text" name="ProcessamentoPETGId" required></input>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+                <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
+              </div>
+              <select class="custom-select mb-3" name="MateriaPrimaId" required>
+                <option disabled>Selecione o produto final</option>
+                <% visores.forEach(m => { %>
+                <option value="<%= m.id %>"><%= m.nomeMassa() %></option>
+                <% }); %>
+              </select>
+              <input class="form-control mb-3" type="number" name="qtd_produzido" step="0.001" min="0" placeholder="Quantidade de visores produzidos" required></input>
+              <select class="custom-select mb-3" name="UsuarioId" required>
+                <option selected disabled>Selecione o usuário LAB responsável</option>
+                <% usuarios.forEach(u => { %>
+                  <option value="<%= u.id %>"><%= u.nome %></option>
+                <% }); %>
+              </select>
+              <button type="submit" class="btn btn-success" >Realizar transação</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      function atualizarPETG(id){
+        $("#atualizar_id").text(id);
+        $("#atualizar_ProcessamentoPETGId").val(id);
+      }
+    </script>
+
+  </body>
+  <% include ../partials/bottom %>
+</html>

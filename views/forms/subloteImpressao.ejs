@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Formulário</title>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <% include ../partials/sidebar_top %>
+      <h3>Cadastrar suportes em um lote de produção</h3>
+      <form method="POST">
+        <select class="custom-select mb-3" name="LoteId" required>
+          <option selected disabled>Selecione o lote de referência</option>
+          <% lotes.forEach(u => { %>
+            <option value="<%= u.id %>">LP<%= u.id %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" name="cod_impressora" required>
+          <option selected disabled>Selecione a impressora</option>
+          <option value="E1">E1</option>
+          <option value="E2">E2</option>
+          <option value="E3">E3</option>
+          <option value="E4">E4</option>
+          <option value="E5">E5</option>
+        </select>
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <input class="form-control mb-3" type="number" name="qtd_suporte_bruto_aprovado" placeholder="Suporte bruto aprovado"></input>
+        <input class="form-control mb-3" type="number" name="qtd_suporte_bruto_aproveitavel" placeholder="Suporte bruto aproveitável"></input>
+        <input class="form-control mb-3" type="number" name="qtd_suporte_bruto_descartavel" placeholder="Suporte bruto descartável"></input>
+        <input class="form-control mb-3" type="number" name="qtd_suporte_aprovado" placeholder="Suporte aprovado"></input>
+        <input class="form-control mb-3" type="number" name="qtd_suporte_aproveitavel" placeholder="Suporte aproveitável"></input>
+        <input class="form-control mb-3" type="number" name="qtd_suporte_descartavel" placeholder="Suporte descartável"></input>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Quantidade de suportes</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th rowspan="2">Cód. Lote</th>
+              <th rowspan="2">Impressora</th>
+              <th colspan="3">Suporte bruto</th>
+              <th colspan="3">Suporte</th>
+            </tr>
+            <tr>
+              <th>Aprovado</th>
+              <th>Aproveitável</th>
+              <th>Descartável</th>
+              <th>Aprovado</th>
+              <th>Aproveitável</th>
+              <th>Descartável</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lotessuportes.forEach(l => { %>
+            <tr>
+              <td rowspan="<%= l.SubloteImpressaos.length %>">LP<%= l.id %></td>
+              <td><%= l.SubloteImpressaos[0].cod_impressora %></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_bruto_aprovado" value="<%= l.SubloteImpressaos[0].qtd_suporte_bruto_aprovado %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_bruto_aproveitavel" value="<%= l.SubloteImpressaos[0].qtd_suporte_bruto_aproveitavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_bruto_descartavel" value="<%= l.SubloteImpressaos[0].qtd_suporte_bruto_descartavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_aprovado" value="<%= l.SubloteImpressaos[0].qtd_suporte_aprovado %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_aproveitavel" value="<%= l.SubloteImpressaos[0].qtd_suporte_aproveitavel %>"></input></td>
+              <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.SubloteImpressaos[0].id %>" name="qtd_suporte_descartavel" value="<%= l.SubloteImpressaos[0].qtd_suporte_descartavel %>"></input></td>
+            </tr>
+              <% l.SubloteImpressaos.slice(1).forEach(s => { %>
+                <tr>
+                  <td><%= s.cod_impressora %></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_aprovado" value="<%= s.qtd_suporte_bruto_aprovado %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_aproveitavel" value="<%= s.qtd_suporte_bruto_aproveitavel %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_bruto_descartavel" value="<%= s.qtd_suporte_bruto_descartavel %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_aprovado" value="<%= s.qtd_suporte_aprovado %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_aproveitavel" value="<%= s.qtd_suporte_aproveitavel %>"></input></td>
+                  <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= s.id %>" name="qtd_suporte_descartavel" value="<%= s.qtd_suporte_descartavel %>"></input></td>
+                </tr>
+              <% }); %>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% include ../partials/sidebar_bottom %>
+  </body>
+  <% include ../partials/bottom %>
+</html>

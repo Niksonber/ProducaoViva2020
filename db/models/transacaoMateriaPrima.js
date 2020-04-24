@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     qtd: DataTypes.DOUBLE,
     tipo: DataTypes.STRING,
     data: DataTypes.DATE,
-    observacao: DataTypes.STRING
+    observacao: DataTypes.STRING,
+    allowUndo: DataTypes.BOOLEAN
   }, {timestamps: false, freezeTableName: true});
 
   // Relacionamento dessa entidade com outras

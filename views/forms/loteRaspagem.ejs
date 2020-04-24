@@ -6,31 +6,45 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-
-    <!-- Raspagem -->
-    <h3>Processo de raspagem</h3>
-    <form method="POST" >
-        <div class="form-group row">
-            <div class="col-sm-10">
-            <select name="LoteImpressaoId" class="custom-select" id="Lote_impressao_ID">
-              <option selected="true" disabled>Lote de Impressão</option>
-              <% loteImpressao.forEach(m => { %>
-                <option value="<%= m.id %>"><%= m.id %></option>
-              <% }); %>
-            </select>
-            </div>
+      <h3>Cadastrar um lote de raspagem</h3>
+      <form method="POST">
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário do LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <input class="form-control mb-3" type="number" step="1" name='qtd_aprovadas' min="1" placeholder="Quantidade de aprovados" required>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+          <input class="form-control" type="date" name='data' value="<%= moment().format('YYYY-MM-DD') %>" required>
         </div>
-        <div class="form-group row">
-            <div class="col-sm-10">
-            <input type="number" step="1" name='qtd_falhas' min="1" class="form-control col" placeholder="Quantidade de falhas" required>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-success" >Cadastrar</button>
-    </form>
-
-
-
-  <% include ../partials/sidebar_bottom %>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Lotes de raspagem cadastrados</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cód.</th>
+              <th>Quantidade aprovada</th>
+              <th>Data</th>
+              <th>Usuário LAB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lotes.forEach(l => { %>
+            <tr>
+              <td>LR<%= l.id %></td>
+              <td><%= l.qtd_aprovadas %></td>
+              <td><%= moment(l.data).format('DD/MM/YYYY') %></td>
+              <td><%= l.Usuario.nome %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>
 </html>

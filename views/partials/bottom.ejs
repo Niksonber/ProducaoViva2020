@@ -1,2 +1,64 @@
 <script src="/javascripts/popper.min.js"></script>
 <script src="/javascripts/bootstrap.js"></script>
+<script>
+    $(".pretendText").parent().addClass("pretendTextParent");
+    $(".pretendText").keyup(function(){
+        this.size = Math.max(this.value.length, 1);
+        if(this.value != this.saved_value){
+            this.parentElement.classList.add("pretendTextParentNotSaved");
+        }
+    });
+    $("select.pretendText").focusin(function(){
+        $(this)[0].size=$(this).find("option").length;
+        // this.parentElement.classList.add("pretendTextParentFloat"); 
+        // this.parentElement.style.marginTop = -this.parentElement.clientHeight/4 + "px";
+    })
+    $("select.pretendText").focusout(function(){
+        // this.parentElement.classList.remove("pretendTextParentFloat");
+        // this.parentElement.style.marginTop = "";
+        $(this)[0].size=0;
+    })
+    $("select.pretendText").change(function(){
+        this.blur()
+    })
+    $("select.pretendText").toArray().forEach(x => {
+        for(var i=0 ; i<x.options.length ; i++){
+            if(x.options[i].value == x.getAttribute("default-value")) x.selectedIndex = i;
+        }
+        x.size = 1;
+        x.saved_value = x.value;
+    })
+    $("input.pretendText").toArray().forEach(x => {
+        x.size = Math.max(x.value.length, 1);
+        x.saved_value = x.value;
+    });
+    $(".pretendText").change(function(){
+        var input = this;
+        var data = {};
+        data["id"] = this.getAttribute("table-id");
+        data["key"] = this.name;
+        data["value"] = this.value;
+        $.ajax({
+            url: "",
+            data: data,
+            type: "PUT",
+            success: function(result) {
+                if(result[0] == 1){
+                    input.saved_value = data["value"];
+                    input.parentElement.classList.remove("pretendTextParentNotSaved");
+                    input.parentElement.classList.remove("pretendTextParentFailed");
+                }
+                else {
+                    input.parentElement.classList.remove("pretendTextParentNotSaved");
+                    input.parentElement.classList.add("pretendTextParentFailed");
+                    alert("Ocorreu uma falha ao salvar essa alteração!");
+                }
+            },
+            error: function(){
+                input.parentElement.classList.remove("pretendTextParentNotSaved");
+                input.parentElement.classList.add("pretendTextParentFailed");
+                alert("Ocorreu uma falha ao salvar essa alteração!");
+            }
+        });
+    });
+</script>

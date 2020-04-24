@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Formulário</title>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <% include ../partials/sidebar_top %>
+      <h3>Cadastrar processo a uma entidade</h3>
+      <form method="POST">
+        <select class="custom-select mb-3" name="EntidadeExternaId" required>
+          <option selected disabled>Selecione a entidade externa</option>
+          <% entidadesExternas.forEach(e => { %>
+            <option value="<%= e.id %>"><%= e.nome %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" name="processo" required>
+          <option selected disabled>Selecione o processo</option>
+          <option value="Processamento de elástico">Processamento de elástico</option>
+          <option value="Processamento de PETG">Processamento de PETG</option>
+        </select>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Entidades e seus processos</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Entidade</th>
+              <th>Processos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% entidadesProcessos.filter(u => u.EntidadeProcessos.length != 0).forEach(u => { %>
+              <tr>
+                <td><%= u.nome %></td>
+                <td>
+                  <ul>
+                    <% u.EntidadeProcessos.forEach(p => { %>
+                      <li><a href="/forms/entidadeProcesso/delete/<%= p.id %>"><img src='/images/trash.png' width=16 style='margin-right: 5px;'/></a><%= p.processo %></li>
+                    <% }); %>
+                  </ul>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% include ../partials/sidebar_bottom %>
+  </body>
+  <% include ../partials/bottom %>
+</html>

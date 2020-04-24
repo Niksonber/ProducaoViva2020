@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Formulário</title>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <% include ../partials/sidebar_top %>
+      <h3>Cadastrar elasticos em um lote de produção</h3>
+      <form method="POST">
+        <select class="custom-select mb-3" name="LoteId" required>
+          <option selected disabled>Selecione o lote de referência</option>
+          <% lotes.forEach(u => { %>
+            <option value="<%= u.id %>">LP<%= u.id %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <input class="form-control mb-3" type="number" name="qtd_elastico_aproveitavel" placeholder="Elástico aproveitável"></input>
+        <input class="form-control mb-3" type="number" name="qtd_elastico_descartavel" placeholder="Elástico descartável"></input>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Quantidade de elásticos</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cód. Lote</th>
+              <th>E NCA</th>
+              <th>E NCD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% elasticos.forEach(s => { %>
+            <tr>
+              <td>LP<%= s.Lote.id %></td>
+              <td><%= s.qtd_elastico_aproveitavel %></td>
+              <td><%= s.qtd_elastico_descartavel %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% include ../partials/sidebar_bottom %>
+  </body>
+  <% include ../partials/bottom %>
+</html>

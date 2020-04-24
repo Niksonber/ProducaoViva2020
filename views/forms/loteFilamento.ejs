@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Formulário</title>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <% include ../partials/sidebar_top %>
+      <h3>Cadastrar um lote de filamento</h3>
+      <span style="color: orange;">Falta permitir atualizar massas em um lote</span>
+      <form method="POST">
+        <input class="form-control mb-3" type="number" name="qtd" placeholder="Quantidade de rolos" required></input>
+        <input class="form-control mb-3" type="number" name="massa_rolo" step="0.001" placeholder="Massa de cada rolo" required></input>
+        <select class="custom-select mb-3" name="tipo" required>
+          <option selected disabled>Selecione o tipo da transação</option>
+          <option value="Compra">Compra</option>
+          <option value="Doação">Doação</option>
+          <option value="Operação externa">Operação externa</option>
+          <option value="Operação interna">Operação interna</option>
+        </select>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+          <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
+        </div>
+        <textarea class="form-control mb-3" name="observacao" placeholder="Observação"></textarea>
+        <select class="custom-select mb-3" name="EntidadeExternaId" required>
+          <option selected disabled>Selecione uma entidade externa</option>
+          <% entidadesExternas.forEach(e => { %>
+            <option value="<%= e.id %>"><%= e.nome %></option>
+          <% }); %>
+        </select>
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Lotes de filamento cadastrados</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Cód.</th>
+              <th>Quantidade atual do lote</th>
+              <th>Data de entrada</th>
+              <th>Observação</th>
+              <th>Entidade externa</th>
+              <th>Usuário do LAB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lotes.forEach(l => { %>
+            <tr>
+              <td><img src="/images/edit.png" width=16/></td>
+              <td>LF<%= l.id %></td>
+              <td><%= l.qtd_atual %></td>
+              <td><%= moment(l.PrimeiraTransacao.data).format('DD/MM/YYYY') %></td>
+              <td><%= l.PrimeiraTransacao.observacao %></td>
+              <td><%= l.PrimeiraTransacao.EntidadeExterna.nome %></td>
+              <td><%= l.PrimeiraTransacao.Usuario.nome %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% include ../partials/sidebar_bottom %>
+  </body>
+  <% include ../partials/bottom %>
+</html>

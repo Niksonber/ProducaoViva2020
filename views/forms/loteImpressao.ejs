@@ -6,48 +6,57 @@
   </head>
   <body>
     <% include ../partials/sidebar_top %>
-   
-    <h3>Lote de impressão</h3>
-    <from method="POST">
-
-      <div class="form-group row">
-        <div class="col-sm-10">
-          <select name="cod_impressora" class="custom-select" id="cod_impressora" >
-            <option selected="true" disabled>Impressora</option>
-            <% [...Array(5).keys()].forEach(m => { %>
-              <option value="<%= m %>"><%= m %></option>
+      <h3>Cadastrar um lote de impressão</h3>
+      <form method="POST">
+        <select class="custom-select mb-3" name="UsuarioId" required>
+          <option selected disabled>Selecione o usuário LAB responsável</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.nome %></option>
+          <% }); %>
+        </select>
+        <input class="form-control mb-3" type="number" step="1" name='qtd_aprovadas' min="1" placeholder="Quantidade aprovada" required>
+        <input class="form-control mb-3" type="number" step="1" name='qtd_reprovadas' min="0" placeholder="Quantidade reprovada" required>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend"><span class="input-group-text">Data</span></div>
+          <input class="form-control" type="date" name='data' value="<%= moment().format('YYYY-MM-DD') %>" required>
+        </div>
+        <select class="custom-select mb-3" name="cod_impressora" required>
+          <option selected disabled>Selecione a impressora</option>
+          <option value="E1">E1</option>
+          <option value="E2">E2</option>
+          <option value="E3">E3</option>
+          <option value="E4">E4</option>
+          <option value="E5">E5</option>
+        </select>
+        <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
+      </form>
+      <h3>Lotes de impressão cadastrados</h3>
+      <div class="table-responsive-md">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cód.</th>
+              <th>Quantidade aprovada</th>
+              <th>Quantidade reprovada</th>
+              <th>Data</th>
+              <th>Impressora</th>
+              <th>Usuário LAB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lotes.forEach(l => { %>
+            <tr>
+              <td>LI<%= l.id %></td>
+              <td><%= l.qtd_aprovadas %></td>
+              <td><%= l.qtd_reprovadas %></td>
+              <td><%= moment(l.data).format('DD/MM/YYYY') %></td>
+              <td><%= l.cod_impressora %></td>
+              <td><%= l.Usuario.nome %></td>
+            </tr>
             <% }); %>
-          </select>
-        </div>
+          </tbody>
+        </table>
       </div>
-
-      <div class="form-group row">
-        <div class="col-sm-10">
-          <input type="number" step="1" name='qtd_aprovadas' min="1" class="form-control col" placeholder="Quantidade de peças aprovadas" required>
-        </div>
-      </div>
-      
-      <div class="form-group row">
-        <div class="col-sm-10">
-          <input type="number" step="1" name='qtd_reprovadas' min="1" class="form-control col" placeholder="Quantidade de peças reprovadas" required>
-        </div>
-      </div>
-      
-      <div class="form-group row">
-        <div class="col-sm-10">
-          <select name="UsuarioId" class="custom-select" id="UsuarioId" >
-            <option selected="true" disabled>Usuário</option>
-            <% usuario.forEach(m => { %>
-              <option value="<%= m.id %>"><%= m.nome %></option>
-            <% }); %>
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-success">Cadastrar</button>
-    </from>
-
-
     <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>

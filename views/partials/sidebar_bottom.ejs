@@ -1,12 +1,39 @@
       </div>
     </div>
     <!-- /#page-content-wrapper -->
-
-  </div>
+  
   <!-- /#wrapper -->
   <script>
-    $("#menu-toggle").click(function(e) {
+    $(".sideBar_toggle").click(function(e) {
       e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
+      $(".sideBar").toggleClass("sideBar_hidden");
     });
+    $(".optionsToggle").click(function(e) {
+      e.preventDefault();
+      $(".subOptions").height("0px");
+      $(".optionsToggle").removeClass("optionsToggled");
+      $(this).addClass("optionsToggled");
+      var el = $("#" + this.getAttribute("toggle"));
+      el.height("auto");
+      var h = el.height();
+      el.height("0px");
+      el.height(h);
+    });
+    a = $(".subOptions").toArray().filter(x => $("a", x).toArray().filter(y => {
+      if(y.href == document.URL){
+        $(y).addClass("selectedOption");
+        return true;
+      }
+      return false;
+    }).length != 0);
+    if(a.length != 0) $(".optionsToggle").toArray().find(x=>x.getAttribute("toggle")==a[0].id).click();
+    function hideSmallWindow(){
+      if ($(window).width() < 800) $(".sideBar").addClass("sideBar_hidden");
+      else $(".sideBar").removeClass("sideBar_hidden");
+    }
+    $(window).on('resize', function(){hideSmallWindow()});
+    hideSmallWindow();
+    setTimeout(function(){$(".subOptions").addClass("subOptionsTransition")}, 1000);
   </script>
+
+  <script type="text/javascript" src="/javascripts/responsiveTable.js"></script>

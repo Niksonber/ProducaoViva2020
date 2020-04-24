@@ -623,10 +623,12 @@ router.post('/pacoteFinal', async function(req, res) {
     UsuarioId: parseInt(req.body.UsuarioId)
   });
 
-  req.body['LoteId[]'].forEach(l => {
+  // TODO: corrigir para apenas 1 valor
+  req.body['LoteId'].forEach((l,indx) => {
     db.PacoteFinalLote.create({
       LoteId: parseInt(l),
-      PacoteFinalId: parseInt(pacoteFinal.id)
+      PacoteFinalId: parseInt(pacoteFinal.id),
+      qtd_faceshields: parseInt(req.body['qtdLote'][indx])
     })
   });
 
@@ -639,11 +641,14 @@ router.get('/pacoteFinal/delete/:id', function(req, res) {
   }).then(r => res.redirect("../../pacoteFinal"));
 });
 
+
+
 router.post('/pacoteFinal/add', function(req, res) {
   console.log(req.body);
   db.PacoteFinalLote.create({
     LoteId: parseInt(req.body.LoteId),
-    PacoteFinalId: parseInt(req.body.PacoteFinalId)
+    PacoteFinalId: parseInt(req.body.PacoteFinalId),
+    qtd_faceshields: parseInt(req.body.qtdLote)
   }).then(r => res.redirect("../pacoteFinal"));
 });
 

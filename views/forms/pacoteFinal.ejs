@@ -22,13 +22,13 @@
         <h5>Lotes de origem <img src="/images/add.png" width=16 onclick="addTemplate();" style="cursor: pointer;"/></h5>
         <div class="replicateArea">
           <div class="template">
-            <select class="custom-select mb-3" name="LoteId[]" required>
+            <select class="custom-select mb-3" name="LoteId" required>
               <option selected disabled>Selecione um lote de origem</option>
               <% lotes.forEach(l => { %>
                 <option value="<%= l.id %>">LP<%= l.id %></option>
               <% }); %>
             </select>
-            <input class="form-control mb-3" type="number" name="qtd_lote[]" step="1" min="1" placeholder="Unidades de faceshield do Lote" required></input>
+            <input class="form-control mb-3" type="number" name="qtdLote" step="1" min="1" placeholder="Unidades de faceshield do Lote" required></input>
           </div>
         </div>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
@@ -73,9 +73,9 @@
         <div class="modal-content" style="padding: 20px;">
           <h3>Adicionar lote ao pacote PF<span id="pacote_id"></span></h3>
             <form method="POST" action="pacoteFinal/add">
-            <div class=hiddenBlock></div>
-              <!-- <input style="display: none;" id="pacote_id_input" type="text" name="PacoteFinalId" required></input>
-              <select class="custom-select mb-3" name="LoteId" required>
+              <div class=hiddenBlock></div>
+              <input style="display: none;" id="pacote_id_input" type="text" name="PacoteFinalId" required></input>
+              <!-- <select class="custom-select mb-3" name="LoteId" required>
                 <option selected disabled>Selecione um lote de origem</option>
                 <% lotes.forEach(l => { %>
                   <option value="<%= l.id %>">LP<%= l.id %></option>

@@ -2,6 +2,7 @@ module.exports = (sequelize, DataTypes) => {
 
   // Declaração da tabela
   var PacoteFinalLote = sequelize.define('PacoteFinalLote', {
+    qtd_faceshields: DataTypes.INTEGER
   }, {timestamps: false, freezeTableName: true});
 
   // Relacionamento dessa entidade com outras

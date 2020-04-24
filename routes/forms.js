@@ -623,7 +623,11 @@ router.post('/pacoteFinal', async function(req, res) {
     UsuarioId: parseInt(req.body.UsuarioId)
   });
 
-  // TODO: corrigir para apenas 1 valor
+  // TODO: fazer isso de forma elegante de fazer isso
+  if(! Array.isArray(req.body['LoteId'])){
+    req.body['LoteId'] = [req.body['LoteId']]
+    req.body['qtdLote'] = [req.body['qtdLote']]
+  }
   req.body['LoteId'].forEach((l,indx) => {
     db.PacoteFinalLote.create({
       LoteId: parseInt(l),

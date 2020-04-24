@@ -427,6 +427,12 @@ router.get('/loteEmbalagemPrimaria', async function(req, res) {
   data = {}
   data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
   data.lotes = await db.Lote.findAll({attributes:['id']});
+  data.lotesEmbalagemPrima = await db.LoteEmbalagemPrimaria.findAll({
+    order: [['id', 'DESC']],
+    include: [
+      {model: db.Usuario}
+    ]   
+  });
 
   res.render("forms/loteEmbalagemPrimaria", data);
 });

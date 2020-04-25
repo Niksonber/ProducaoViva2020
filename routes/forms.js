@@ -676,7 +676,8 @@ router.get('/entregaFinal', async function(req, res) {
   data.clientes = await db.Cliente.findAll({attributes:['id', 'nome']});
   data.pacoteFinal = await db.PacoteFinal.findAll({attributes:['id'], order:[['id', 'desc']]});
   data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
- 
+  data.usuariosExt = await db.UsuarioExterno.findAll({order: [['id', 'DESC']], include: db.EntidadeExterna});
+  
   res.render("forms/entregaFinal", data);
 });
 

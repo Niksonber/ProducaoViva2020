@@ -21,27 +21,32 @@
       </div>
       <div class="form-group row">
         <div class="col-sm-10">
-          <select name="PacoteFinalId" class="custom-select">
-            <option selected="true" disabled>Pacote</option>
-            <% pacoteFinal.forEach(m => { %>
-              <opton value="<%= m.id %>"><%= m.id %></opton>
+          <select name="PacoteFinalId" class="custom-select" required>
+            <option selected disabled>Pacote</option>
+            <% pacoteFinal.forEach(p => { %>
+              <option value="<%= p.id %>">PF<%= p.id %></option>
             <% }); %>
           </select>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-sm-10">
-          <select name="UsuarioId" class="custom-select">
-            <option selected="true" disabled>Representante do LAB</option>
-            <% usuarios.forEach(m => { %>
-              <opton value="<%= m.id %>"><%= m.nome %></opton>
+          <select class="custom-select" name="UsuarioId" required>
+            <option selected disabled>Selecione o usuário LAB responsável</option>
+            <% usuarios.forEach(u => { %>
+              <option value="<%= u.id %>"><%= u.nome %></option>
             <% }); %>
           </select>
         </div>
       </div>
       <div class="form-group row">
           <div class="col-sm-10">
-            <input type="text" name='nomeRepresentanteCliente'  class="form-control col" placeholder="Nome do representante do cliente" required>
+            <select class="custom-select" name="UsuarioExtId" required>
+              <option selected disabled> Selecione o colaborador do cliente</option>
+              <% usuariosExt.forEach( u=> { %>
+                <option value="<%=u.id%>"><%= u.nome %></option>
+              <% }) %>
+            </select>
           </div>
       </div>
       <button type="submit" class="btn btn-success" >Cadastrar</button>

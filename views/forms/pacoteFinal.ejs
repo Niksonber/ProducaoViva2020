@@ -21,14 +21,16 @@
         </select>
         <h5>Lotes de origem <img src="/images/add.png" width=16 onclick="addTemplate();" style="cursor: pointer;"/></h5>
         <div class="replicateArea">
-          <div class="template">
-            <select class="custom-select mb-3" name="LoteId" required>
-              <option selected disabled>Selecione um lote de origem</option>
-              <% lotes.forEach(l => { %>
-                <option value="<%= l.id %>">LP<%= l.id %></option>
-              <% }); %>
-            </select>
-            <input class="form-control mb-3" type="number" name="qtdLote" step="1" min="1" placeholder="Unidades de faceshield do Lote" required></input>
+          <div class="template" style="margin-right: 25px;">
+            <div style="display: flex; flex-wrap: wrap;">
+              <select class="custom-select" style="width: auto; flex-grow: 100; margin-bottom: 10px; margin-right: 10px;" name="LoteId" required>
+                <option selected disabled>Selecione um lote de origem</option>
+                <% lotes.forEach(l => { %>
+                  <option value="<%= l.id %>">LP<%= l.id %></option>
+                <% }); %>
+              </select>
+              <input class="form-control" style="width: auto; flex-grow: 100; margin-bottom: 10px; margin-right: 10px;" type="number" name="qtdLote" step="1" min="1" placeholder="Unidades de faceshield do Lote" required></input>
+            </div>
           </div>
         </div>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>

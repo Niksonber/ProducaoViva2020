@@ -30,14 +30,40 @@
           </select>
         </div>
       </div>
+      <div class="form-group row">
+        <div class="col-sm-10">
+          <input class="form-control" name="qtd" type="number" step="1" min="1" placeholder="Quantidade embalada" required></input>
+        </div>
+      </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend"><span class="input-group-text">Data de embalagem</span></div>
         <input class="form-control" type="date" name="data" value="<%= moment().format('YYYY-MM-DD'); %>" required></input>
       </div>
       <button type="submit" class="btn btn-success" >Cadastrar</button>
     </form>
-
-
+    <h3>Lotes de embalagens primárias cadastradas</h3>
+    <div class="table-responsive-md">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Cód.</th>
+            <th>Quantidade</th>
+            <th>Data de embalagem</th>
+            <th>Usuário do LAB</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% lotesEmbalagemPrima.forEach(l => { %>
+          <tr>
+            <td>LP<%= l.LoteId %></td>
+            <td><input class="pretendText" type="number" step="1" min="0" table-id="<%= l.id %>" name="qtd" value="<%= l.qtd %>"></input></td>
+            <td><%= moment(l.data).format('DD/MM/YYYY') %></td>
+            <td><%= l.Usuario.nome %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
   <% include ../partials/sidebar_bottom %>
   </body>
   <% include ../partials/bottom %>

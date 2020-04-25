@@ -427,6 +427,12 @@ router.get('/loteEmbalagemPrimaria', async function(req, res) {
   data = {}
   data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
   data.lotes = await db.Lote.findAll({attributes:['id']});
+  data.lotesEmbalagemPrima = await db.LoteEmbalagemPrimaria.findAll({
+    order: [['id', 'DESC']],
+    include: [
+      {model: db.Usuario}
+    ]   
+  });
 
   res.render("forms/loteEmbalagemPrimaria", data);
 });
@@ -435,9 +441,18 @@ router.post('/loteEmbalagemPrimaria', async function(req, res) {
   db.LoteEmbalagemPrimaria.create({
     data: moment(req.body.data).toISOString(),
     LoteId: parseInt(req.body.LoteId),
-    UsuarioId: parseInt(req.body.UsuarioId)
+    UsuarioId: parseInt(req.body.UsuarioId),
+    qtd: parseInt(req.body.qtd)
   })
   .then(r => res.redirect("loteEmbalagemPrimaria"));
+});
+
+router.put('/loteEmbalagemPrimaria', function(req, res) {
+  var data = {};
+  data[req.body.key] = req.body.value;
+  db.LoteEmbalagemPrimaria.update(data, {where: {id: parseInt(req.body.id)}, fields: ['qtd']}).then(rows => {
+    res.send(rows);
+  });
 });
 
 router.get('/processamentoElastico', async function(req, res) {
@@ -623,10 +638,16 @@ router.post('/pacoteFinal', async function(req, res) {
     UsuarioId: parseInt(req.body.UsuarioId)
   });
 
-  req.body['LoteId[]'].forEach(l => {
+  // TODO: fazer isso de forma elegante de fazer isso
+  if(! Array.isArray(req.body['LoteId'])){
+    req.body['LoteId'] = [req.body['LoteId']]
+    req.body['qtdLote'] = [req.body['qtdLote']]
+  }
+  req.body['LoteId'].forEach((l,indx) => {
     db.PacoteFinalLote.create({
       LoteId: parseInt(l),
-      PacoteFinalId: parseInt(pacoteFinal.id)
+      PacoteFinalId: parseInt(pacoteFinal.id),
+      qtd_faceshields: parseInt(req.body['qtdLote'][indx])
     })
   });
 
@@ -639,16 +660,25 @@ router.get('/pacoteFinal/delete/:id', function(req, res) {
   }).then(r => res.redirect("../../pacoteFinal"));
 });
 
+
+
 router.post('/pacoteFinal/add', function(req, res) {
   console.log(req.body);
   db.PacoteFinalLote.create({
     LoteId: parseInt(req.body.LoteId),
-    PacoteFinalId: parseInt(req.body.PacoteFinalId)
+    PacoteFinalId: parseInt(req.body.PacoteFinalId),
+    qtd_faceshields: parseInt(req.body.qtdLote)
   }).then(r => res.redirect("../pacoteFinal"));
 });
 
-router.get('/entregaFinal', function(req, res) {
-  res.render("forms/entregaFinal");
+router.get('/entregaFinal', async function(req, res) {
+  data = {}
+  data.clientes = await db.Cliente.findAll({attributes:['id', 'nome']});
+  data.pacoteFinal = await db.PacoteFinal.findAll({attributes:['id'], order:[['id', 'desc']]});
+  data.usuarios = await db.Usuario.findAll({attributes:['id', 'nome']});
+  data.usuariosExt = await db.UsuarioExterno.findAll({order: [['id', 'DESC']], include: db.EntidadeExterna});
+  
+  res.render("forms/entregaFinal", data);
 });
 
 router.get('/datas', function(req, res) {

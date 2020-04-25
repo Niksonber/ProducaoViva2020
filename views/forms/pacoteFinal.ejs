@@ -22,12 +22,13 @@
         <h5>Lotes de origem <img src="/images/add.png" width=16 onclick="addTemplate();" style="cursor: pointer;"/></h5>
         <div class="replicateArea">
           <div class="template">
-            <select class="custom-select mb-3" name="LoteId[]" required>
+            <select class="custom-select mb-3" name="LoteId" required>
               <option selected disabled>Selecione um lote de origem</option>
               <% lotes.forEach(l => { %>
                 <option value="<%= l.id %>">LP<%= l.id %></option>
               <% }); %>
             </select>
+            <input class="form-control mb-3" type="number" name="qtdLote" step="1" min="1" placeholder="Unidades de faceshield do Lote" required></input>
           </div>
         </div>
         <button class="btn btn-success mb-3" type="submit">Cadastrar</button>
@@ -50,7 +51,7 @@
                 <td><%= moment(u.data).format('DD/MM/YYYY') %></td>
                 <td><%= u.qtd_faceshields %></td>
                 <td>
-                  <div><a data-toggle="modal" data-target=".adicionarLote" style="cursor: pointer;" onclick="$('#pacote_id').text('<%= u.id %>'); $('#pacote_id_input').val('<%= u.id %>')"><img src="/images/add.png" width=16 style="margin-right: 10px;"/>Adicionar lote</a></div>
+                  <div><a data-toggle="modal" data-target=".adicionarLote" style="cursor: pointer;" onclick="var template = $('.template').html();$('.hiddenBlock').html(template); $('#pacote_id').text('<%= u.id %>'); $('#pacote_id_input').val('<%= u.id %>')"><img src="/images/add.png" width=16 style="margin-right: 10px;"/>Adicionar lote</a></div>
                   <ul>
                     <% u.PacoteFinalLotes.forEach(p => { %>
                       <li><a href="pacoteFinal/delete/<%= p.id %>"><img src='/images/trash.png' width=16 style='margin-right: 5px;'/></a>LP<%= p.LoteId %></li>
@@ -72,13 +73,14 @@
         <div class="modal-content" style="padding: 20px;">
           <h3>Adicionar lote ao pacote PF<span id="pacote_id"></span></h3>
             <form method="POST" action="pacoteFinal/add">
+              <div class=hiddenBlock></div>
               <input style="display: none;" id="pacote_id_input" type="text" name="PacoteFinalId" required></input>
-              <select class="custom-select mb-3" name="LoteId" required>
+              <!-- <select class="custom-select mb-3" name="LoteId" required>
                 <option selected disabled>Selecione um lote de origem</option>
                 <% lotes.forEach(l => { %>
                   <option value="<%= l.id %>">LP<%= l.id %></option>
                 <% }); %>
-              </select>
+              </select> -->
               <button type="submit" class="btn btn-success" >Adicionar</button>
           </form>
         </div>

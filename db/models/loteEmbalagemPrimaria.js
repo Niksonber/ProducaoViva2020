@@ -2,6 +2,7 @@ module.exports = (sequelize, DataTypes) => {
 
   // Declaração da tabela
   var LoteEmbalagemPrimaria = sequelize.define('LoteEmbalagemPrimaria', {
+    qtd: DataTypes.INTEGER,
     data: DataTypes.DATE
   }, {timestamps: false, freezeTableName: true});
 

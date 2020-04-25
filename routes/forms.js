@@ -441,9 +441,18 @@ router.post('/loteEmbalagemPrimaria', async function(req, res) {
   db.LoteEmbalagemPrimaria.create({
     data: moment(req.body.data).toISOString(),
     LoteId: parseInt(req.body.LoteId),
-    UsuarioId: parseInt(req.body.UsuarioId)
+    UsuarioId: parseInt(req.body.UsuarioId),
+    qtd: parseInt(req.body.qtd)
   })
   .then(r => res.redirect("loteEmbalagemPrimaria"));
+});
+
+router.put('/loteEmbalagemPrimaria', function(req, res) {
+  var data = {};
+  data[req.body.key] = req.body.value;
+  db.LoteEmbalagemPrimaria.update(data, {where: {id: parseInt(req.body.id)}, fields: ['qtd']}).then(rows => {
+    res.send(rows);
+  });
 });
 
 router.get('/processamentoElastico', async function(req, res) {
